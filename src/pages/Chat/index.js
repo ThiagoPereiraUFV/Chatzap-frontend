@@ -1,3 +1,4 @@
+//  Importing React and socket.io resources
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
@@ -13,10 +14,10 @@ let socket;
 export const Chat = ({ name, room }) => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-  const [users, setUsers] = useState('');
+  const [users, setUsers] = useState("");
 
 	useEffect(() => {
-		socket = io.connect(process.env.REACT_APP_API_URL, {
+		socket = io.connect(process.env.REACT_APP_ENDPOINT, {
 			"force new connection" : true,
 			"reconnectionAttempts": "Infinity",
 			"timeout" : 10000,
