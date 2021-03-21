@@ -1,50 +1,107 @@
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import "./style.css";
+//	Importing React Bootstrap features
+import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
-export const Join = ({ name, setName, room, setRoom }) => {
+export const Join = () => {
+	//	User and group state variables
+	const [name, setName] = useState("");
+	const [number, setNumber] = useState("");
+	const [numberDirect, setNumberDirect] = useState("");
+	const [group, setGroup] = useState("");
+	const [direct, setDirect] = useState(true);
+
 	const history = useHistory();
 
-	async function signin(event) {
+	async function join(event) {
 		event.preventDefault();
 
 		sessionStorage.setItem("name", name);
-		sessionStorage.setItem("room", room);
+		sessionStorage.setItem("number", number);
 
-		history.push("/chat");
+		if(direct) {
+			sessionStorage.setItem("numberDirect", numberDirect);
+			sessionStorage.removeItem("group");
+
+			history.push("/direct");
+		} else {
+			sessionStorage.setItem("group", group);
+			sessionStorage.removeItem("numberDirect");
+
+			history.push("/group");
+		}
 	}
 
 	return (
-		<div className="joinOuterContainer">
-			<div className="joinInnerContainer">
-				<h1 className="heading">Chatjoin</h1>
-					<form onSubmit={signin}>
-					<div>
-						<input
-							className="joinInput"
-							type="text"
-							name="name"
-							placeholder="Seu nome"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							autoFocus
-							required
-						/>
-					</div>
-					<div>
-						<input
-						className="joinInput mt-20"
-						type="text"
-						name="room"
-						placeholder="Sala que deseja participar"
-						value={room}
-						onChange={(e) => setRoom(e.target.value)}
-						required
-					/>
-					</div>
-					<button className="button mt-20" type="submit" disabled={!name || !room}>Sign In</button>
-				</form>
-			</div>
-		</div>
+		<Container className="m-auto" fluid>
+			<Col className="m-auto" lg="3" md="6">
+				<Form onSubmit={join}>
+					<Row>
+						<Form.Group as={Col} controlId="name" sm="12">
+							<Form.Label>Seu nome</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="Nome"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								autoFocus
+								required
+							/>
+						</Form.Group>
+						<Form.Group as={Col} controlId="phone" sm="12">
+							<Form.Label>Seu número</Form.Label>
+							<Form.Control
+								type="tel"
+								placeholder="Número"
+								value={number}
+								onChange={(e) => setNumber(e.target.value)}
+								required
+							/>
+						</Form.Group>
+						<Form.Group as={Col} controlId="direct">
+							<Form.Check
+								type="switch"
+								label={direct ? "Conversa privada" : "Conversa em grupo"}
+								checked={direct}
+								onChange={e => setDirect(e.target.checked)}
+							/>
+						</Form.Group>
+						{direct ?
+							<Form.Group as={Col} controlId="phoneDirect" sm="12">
+								<Form.Label>Número de destino</Form.Label>
+								<Form.Control
+									type="tel"
+									placeholder="Número"
+									value={numberDirect}
+									onChange={(e) => setNumberDirect(e.target.value)}
+									required={direct}
+								/>
+							</Form.Group>
+							:
+							<Form.Group as={Col} controlId="group" sm="12">
+								<Form.Label>Nome do grupo</Form.Label>
+								<Form.Control
+									type="text"
+									placeholder="Grupo"
+									value={group}
+									onChange={(e) => setGroup(e.target.value)}
+									required={!direct}
+								/>
+							</Form.Group>
+						}
+						<Col className="text-center my-2" sm="12">
+							<Button
+								variant="success"
+								type="submit"
+								disabled={!name || !number || (direct && !numberDirect) || (!direct && !group)}
+							>
+								Iniciar
+							</Button>
+						</Col>
+					</Row>
+				</Form>
+			</Col>
+		</Container>
 	);
 }

@@ -11,7 +11,7 @@ import { TextContainer } from "../../components/TextContainer";
 
 let socket;
 
-export const Chat = ({ name, room }) => {
+export const Direct = ({ name, number, room }) => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState("");
