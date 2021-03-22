@@ -2,19 +2,17 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-import "./style.css";
-
 import { Infobar } from "../../components/Infobar";
 import { Input } from "../../components/Input";
 import { Messages } from "../../components/Messages";
-import { TextContainer } from "../../components/TextContainer";
+import { Container } from "react-bootstrap";
 
 let socket;
 
-export const Group = ({ name, number, room }) => {
+export const Group = ({ user }) => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-  const [users, setUsers] = useState("");
+  const [users, setUsers] = useState([]);
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_ENDPOINT, {
@@ -24,21 +22,25 @@ export const Group = ({ name, number, room }) => {
 			"transports" : ["websocket"]
 		});
 
-		socket.emit("join", { name, room }, (error) => {
+		socket.emit("joinGroup", {
+			name: user?.name,
+			number: user?.number,
+			group: user?.group
+		}, (error) => {
 			if(error) {
         alert(error);
       }
 		});
 
 		return () => socket.disconnect();
-	}, [name, room]);
+	}, [user]);
 
 	useEffect(() => {
 		socket.on("message", (message) => {
 			setMessages(messages => [ ...messages, message ]);
 		});
 
-		socket.on("roomData", ({ users }) => {
+		socket.on("groupData", ({ users }) => {
       setUsers(users);
     });
 	}, []);
@@ -52,13 +54,10 @@ export const Group = ({ name, number, room }) => {
 	}
 
 	return (
-		<div className="outerContainer">
-			<div className="container">
-				<Infobar room={room} />
-				<Messages messages={messages} name={name} />
-				<Input setMessage={setMessage} sendMessage={sendMessage} message={message} />
-			</div>
-			<TextContainer users={users} />
-		</div>
+		<Container className="d-flex p-0 h-100 flex-column" fluid>
+			<Infobar room={user?.group} />
+			<Messages messages={messages} name={user?.name} />
+			<Input setMessage={setMessage} sendMessage={sendMessage} message={message} />
+		</Container>
 	);
 }

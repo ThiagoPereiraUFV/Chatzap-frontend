@@ -11,9 +11,7 @@ import { NotFound } from "./pages/Website/NotFound";
 
 //	Exporting Routes
 export const Routes = () => {
-	const name = useState(sessionStorage.getItem("name"));
-	const number = useState(sessionStorage.getItem("number"));
-	const room = useState(sessionStorage.getItem("room"));
+	const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
 
 	return (
 		<BrowserRouter>
@@ -21,15 +19,15 @@ export const Routes = () => {
 				<Route exact path="/" component={Home} />
 				<Route
 					exact path="/join"
-					component={Join}
+					component={() => <Join user={user} setUser={setUser} />}
 				/>
 				<Route
 					exact path="/direct"
-					component={() => <Direct name={name} number={number} room={room} />}
+					component={() => <Direct user={user} />}
 				/>
 				<Route
 					exact path="/group"
-					component={() => <Group name={name} number={number} room={room} />}
+					component={() => <Group user={user} />}
 				/>
 				<Route path="*" component={NotFound} status={404} />
 			</Switch>

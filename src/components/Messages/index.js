@@ -1,11 +1,13 @@
-import ScrollToBottom from "react-scroll-to-bottom";
+import { Col, Row } from "react-bootstrap";
 
 import { Message } from "./Message";
 
-import "./style.css";
-
 export const Messages = ({ messages, name }) => (
-	<ScrollToBottom className="messages">
-    {messages.map((message, i) => <div key={i}><Message message={message} name={name}/></div>)}
-  </ScrollToBottom>
+  <Row className="py-4 mx-0 mb-auto w-100" style={{ overflowY: "auto" }}>
+    {messages.map((message, i) => (
+      <Col className="m-0 p-0" sm="12">
+        <Message message={message} name={name} />
+      </Col>
+    ))}
+  </Row>
 );

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 //	Importing React Bootstrap features
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
-export const Join = () => {
+export const Join = ({ user, setUser }) => {
 	//	User and group state variables
 	const [name, setName] = useState("");
 	const [number, setNumber] = useState("");
@@ -17,17 +17,26 @@ export const Join = () => {
 	async function join(event) {
 		event.preventDefault();
 
-		sessionStorage.setItem("name", name);
-		sessionStorage.setItem("number", number);
-
 		if(direct) {
-			sessionStorage.setItem("numberDirect", numberDirect);
-			sessionStorage.removeItem("group");
+			const user = {
+				name,
+				number,
+				numberDirect
+			};
+
+			sessionStorage.setItem("user", JSON.stringify(user));
+			setUser(user);
 
 			history.push("/direct");
 		} else {
-			sessionStorage.setItem("group", group);
-			sessionStorage.removeItem("numberDirect");
+			const user = {
+				name,
+				number,
+				group
+			};
+
+			sessionStorage.setItem("user", JSON.stringify(user));
+			setUser(user);
 
 			history.push("/group");
 		}
