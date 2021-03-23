@@ -50,7 +50,7 @@ export const Direct = ({ user }) => {
 
 	return (
 		<Container className="d-flex p-0 h-100 flex-column" fluid>
-			<Infobar room={"Messagem direta"} />
+			<Infobar room={user?.nameDirect ?? "Messagem direta"} />
 			<Messages messages={messages} number={user?.number} />
 			<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 		</Container>

@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 //	Importing pages
-import { Join } from "./pages/Join";
+import { JoinDirect } from "./pages/Join/Direct";
+import { JoinGroup } from "./pages/Join/Group";
 import { Direct } from "./pages/Chat/Direct";
 import { Group } from "./pages/Chat/Group";
 import { Home } from "./pages/Website/Home";
@@ -18,8 +19,12 @@ export const Routes = () => {
 			<Switch>
 				<Route exact path="/" component={Home} />
 				<Route
-					exact path="/join"
-					component={() => <Join setUser={setUser} />}
+					exact path="/joinDirect"
+					component={() => <JoinDirect setUser={setUser} />}
+				/>
+				<Route
+					exact path="/joinGroup"
+					component={() => <JoinGroup setUser={setUser} />}
 				/>
 				<Route
 					exact path="/direct"

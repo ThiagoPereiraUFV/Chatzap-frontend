@@ -5,15 +5,14 @@ import { useHistory } from "react-router-dom";
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
 //	Importing api to communicate to backend
-import api from "../../services/api";
+import api from "../../../services/api";
 
-export const Join = ({ setUser }) => {
+export const JoinDirect = ({ setUser }) => {
 	//	User and group state variables
 	const [name, setName] = useState("");
 	const [number, setNumber] = useState("");
 	const [numberDirect, setNumberDirect] = useState("");
-	const [group, setGroup] = useState("");
-	const [direct, setDirect] = useState(true);
+	const [nameDirect, setNameDirect] = useState("");
 
 	const history = useHistory();
 
@@ -27,29 +26,17 @@ export const Join = ({ setUser }) => {
 					if(response.data.exists) {
 						alert("Número indisponível!");
 					} else {
-						if(direct) {
-							const user = {
-								name,
-								number,
-								numberDirect
-							};
+						const user = {
+							name,
+							number,
+							numberDirect,
+							nameDirect
+						};
 
-							sessionStorage.setItem("user", JSON.stringify(user));
-							setUser(user);
+						sessionStorage.setItem("user", JSON.stringify(user));
+						setUser(user);
 
-							history.push("/direct");
-						} else {
-							const user = {
-								name,
-								number,
-								group
-							};
-
-							sessionStorage.setItem("user", JSON.stringify(user));
-							setUser(user);
-
-							history.push("/group");
-						}
+						history.push("/direct");
 					}
 				}
 			}).catch(() => {
@@ -84,42 +71,31 @@ export const Join = ({ setUser }) => {
 								required
 							/>
 						</Form.Group>
-						<Form.Group as={Col} controlId="direct">
-							<Form.Check
-								type="switch"
-								label={direct ? "Conversa privada" : "Conversa em grupo"}
-								checked={direct}
-								onChange={e => setDirect(e.target.checked)}
+						<Form.Group as={Col} controlId="nameDirect" sm="12">
+							<Form.Label>Nome do destino</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="Nome"
+								value={nameDirect}
+								onChange={(e) => setNameDirect(e.target.value)}
+								required
 							/>
 						</Form.Group>
-						{direct ?
-							<Form.Group as={Col} controlId="phoneDirect" sm="12">
-								<Form.Label>Número de destino</Form.Label>
-								<Form.Control
-									type="tel"
-									placeholder="Número"
-									value={numberDirect}
-									onChange={(e) => setNumberDirect(e.target.value)}
-									required={direct}
-								/>
-							</Form.Group>
-							:
-							<Form.Group as={Col} controlId="group" sm="12">
-								<Form.Label>Nome do grupo</Form.Label>
-								<Form.Control
-									type="text"
-									placeholder="Grupo"
-									value={group}
-									onChange={(e) => setGroup(e.target.value)}
-									required={!direct}
-								/>
-							</Form.Group>
-						}
+						<Form.Group as={Col} controlId="phoneDirect" sm="12">
+							<Form.Label>Número de destino</Form.Label>
+							<Form.Control
+								type="tel"
+								placeholder="Número"
+								value={numberDirect}
+								onChange={(e) => setNumberDirect(e.target.value)}
+								required
+							/>
+						</Form.Group>
 						<Col className="text-center my-2" sm="12">
 							<Button
 								variant="success"
 								type="submit"
-								disabled={!name || !number || (direct && !numberDirect) || (!direct && !group)}
+								disabled={!name || !number || !numberDirect}
 							>
 								Iniciar
 							</Button>

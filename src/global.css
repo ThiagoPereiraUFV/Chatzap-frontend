@@ -40,3 +40,56 @@ body {
 ::-webkit-scrollbar-thumb {
   background:  #797878;
 }
+
+/*	Typography sizes	*/
+
+@media (min-width: 0) {
+	.display-1 {
+		font-size: 300%;
+  }
+  .display-4 {
+		font-size: 300%;
+	}
+}
+
+@media (min-width: 320px) {
+	.display-1 {
+		font-size: 280%;
+	}
+}
+
+@media (min-width: 375px) {
+	.display-1 {
+		font-size: 340%;
+	}
+}
+
+@media (min-width: 425px) {
+	.display-1 {
+		font-size: 370%;
+	}
+}
+
+@media (min-width: 768px) {
+	.display-1 {
+		font-size: 439%;
+	}
+}
+
+@media (min-width: 1024px) {
+	.display-1 {
+		font-size: 603%;
+	}
+}
+
+@media (min-width: 1440px) {
+	.display-1 {
+		font-size: 869%;
+	}
+}
+
+@media (min-width: 2560px) {
+	.display-1 {
+		font-size: 1587%;
+	}
+}
