@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
+import { motion } from "framer-motion";
+import { Container } from "react-bootstrap";
+
 import { Infobar } from "../../../components/Infobar";
 import { Input } from "../../../components/Input";
 import { Messages } from "../../../components/Messages";
-import { Container } from "react-bootstrap";
 
 let socket;
 
@@ -54,10 +56,17 @@ export const Direct = ({ user }) => {
 	}
 
 	return (
-		<Container className="d-flex p-0 h-100 flex-column" fluid>
+		<motion.div
+			as={Container}
+			className="d-flex p-0 h-100 flex-column w-100"
+			initial={{ opacity: 0 }}
+			exit={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ ease: "easeOut", duration: 2 }}
+		>
 			<Infobar room={user?.nameDirect ?? "Messagem direta"} online={online} />
 			<Messages messages={messages} number={user?.number} numberDirect={user?.numberDirect} />
 			<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-		</Container>
+			</motion.div>
 	);
 }

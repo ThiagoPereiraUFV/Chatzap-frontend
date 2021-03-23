@@ -2,10 +2,13 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
+import { Container } from "react-bootstrap";
+
+import { motion } from "framer-motion";
+
 import { Infobar } from "../../../components/Infobar";
 import { Input } from "../../../components/Input";
 import { Messages } from "../../../components/Messages";
-import { Container } from "react-bootstrap";
 
 let socket;
 
@@ -54,10 +57,17 @@ export const Group = ({ user }) => {
 	}
 
 	return (
-		<Container className="d-flex p-0 h-100 flex-column" fluid>
+		<motion.div
+			as={Container}
+			className="d-flex p-0 h-100 flex-column w-100"
+			initial={{ opacity: 0 }}
+			exit={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ ease: "easeOut", duration: 2 }}
+		>
 			<Infobar room={user?.group} />
 			<Messages messages={messages} number={user?.number} />
 			<Input setMessage={setMessage} sendMessage={sendMessage} message={message} />
-		</Container>
+			</motion.div>
 	);
 }

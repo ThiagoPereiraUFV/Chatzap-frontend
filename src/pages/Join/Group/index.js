@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import { motion } from "framer-motion";
+
 //	Importing React Bootstrap features
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
@@ -46,7 +48,14 @@ export const JoinGroup = ({ setUser }) => {
 	}
 
 	return (
-		<Container className="m-auto" fluid>
+		<motion.div
+			as={Container}
+			className="m-auto w-100"
+			initial={{ opacity: 0 }}
+			exit={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ ease: "easeOut", duration: 1 }}
+		>
 			<Col className="m-auto" lg="3" md="6">
 				<Form onSubmit={join}>
 					<Row>
@@ -94,6 +103,6 @@ export const JoinGroup = ({ setUser }) => {
 				</Form>
 			</Col>
 			<Footer />
-		</Container>
+		</motion.div>
 	);
 }

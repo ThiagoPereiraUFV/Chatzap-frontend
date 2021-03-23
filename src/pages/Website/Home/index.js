@@ -1,13 +1,20 @@
 import { Jumbotron, Col, Row, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+import { motion } from "framer-motion";
+
 import { Footer } from "../../../components/Footer";
 
 import zap from "../../../assets/zap.ico";
 
 //	Exporting Home page
 export const Home = () => (
-	<div className="d-flex flex-row flex-wrap justify-content-around my-auto">
+	<motion.div
+		className="d-flex flex-row flex-wrap justify-content-around my-auto"
+		initial={{ opacity: 0 }}
+		exit={{ opacity: 0 }}
+		animate={{ opacity: 1 }}
+	>
 		<Jumbotron as={Col} style={{borderRadius: "30px"}} className="py-3 m-2 bg-success" sm="7">
 			<h2 className="display-5 font-italic">Bora conversar!</h2>
 			<Row className="m-auto">
@@ -41,5 +48,5 @@ export const Home = () => (
 			</p>
 		</Jumbotron>
 		<Footer />
-	</div>
+	</motion.div>
 );

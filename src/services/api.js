@@ -6,5 +6,5 @@ export default axios.create({
 	baseURL: process.env.REACT_APP_ENDPOINT
 });
 
-//	REACT_APP_ENDPOINT=chatzap.herokuapp.com/
+//	REACT_APP_ENDPOINT=https://chatzap.herokuapp.com/
 //	REACT_APP_ENDPOINT=http://localhost:4000/
