@@ -4,7 +4,10 @@ import { useHistory } from "react-router-dom";
 //	Importing React Bootstrap features
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
-export const Join = ({ user, setUser }) => {
+//	Importing api to communicate to backend
+import api from "../../services/api";
+
+export const Join = ({ setUser }) => {
 	//	User and group state variables
 	const [name, setName] = useState("");
 	const [number, setNumber] = useState("");
@@ -17,28 +20,41 @@ export const Join = ({ user, setUser }) => {
 	async function join(event) {
 		event.preventDefault();
 
-		if(direct) {
-			const user = {
-				name,
-				number,
-				numberDirect
-			};
+		if(number) {
+			await api.get("/user/" + number)
+			.then((response) => {
+				if(response && response.status === 200) {
+					if(response.data.exists) {
+						alert("Número indisponível!");
+					} else {
+						if(direct) {
+							const user = {
+								name,
+								number,
+								numberDirect
+							};
 
-			sessionStorage.setItem("user", JSON.stringify(user));
-			setUser(user);
+							sessionStorage.setItem("user", JSON.stringify(user));
+							setUser(user);
 
-			history.push("/direct");
-		} else {
-			const user = {
-				name,
-				number,
-				group
-			};
+							history.push("/direct");
+						} else {
+							const user = {
+								name,
+								number,
+								group
+							};
 
-			sessionStorage.setItem("user", JSON.stringify(user));
-			setUser(user);
+							sessionStorage.setItem("user", JSON.stringify(user));
+							setUser(user);
 
-			history.push("/group");
+							history.push("/group");
+						}
+					}
+				}
+			}).catch(() => {
+				alert("Erro interno!");
+			});
 		}
 	}
 

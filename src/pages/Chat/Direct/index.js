@@ -2,17 +2,16 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-import { Infobar } from "../../components/Infobar";
-import { Input } from "../../components/Input";
-import { Messages } from "../../components/Messages";
+import { Infobar } from "../../../components/Infobar";
+import { Input } from "../../../components/Input";
+import { Messages } from "../../../components/Messages";
 import { Container } from "react-bootstrap";
 
 let socket;
 
-export const Group = ({ user }) => {
+export const Direct = ({ user }) => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-  const [users, setUsers] = useState([]);
 
 	useEffect(() => {
 		socket = io.connect(process.env.REACT_APP_ENDPOINT, {
@@ -22,10 +21,10 @@ export const Group = ({ user }) => {
 			"transports" : ["websocket"]
 		});
 
-		socket.emit("joinGroup", {
+		socket.emit("joinDirect", {
 			name: user?.name,
 			number: user?.number,
-			group: user?.group
+			numberDirect: user?.numberDirect
 		}, (error) => {
 			if(error) {
         alert(error);
@@ -39,10 +38,6 @@ export const Group = ({ user }) => {
 		socket.on("message", (message) => {
 			setMessages(messages => [ ...messages, message ]);
 		});
-
-		socket.on("groupData", ({ users }) => {
-      setUsers(users);
-    });
 	}, []);
 
 	function sendMessage(event) {
@@ -55,9 +50,9 @@ export const Group = ({ user }) => {
 
 	return (
 		<Container className="d-flex p-0 h-100 flex-column" fluid>
-			<Infobar room={user?.group} />
-			<Messages messages={messages} name={user?.name} />
-			<Input setMessage={setMessage} sendMessage={sendMessage} message={message} />
+			<Infobar room={"Messagem direta"} />
+			<Messages messages={messages} number={user?.number} />
+			<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 		</Container>
 	);
 }

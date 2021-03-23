@@ -26,3 +26,17 @@ body {
 
 	background-image: url(./assets/bg.png);
 }
+
+/* Scroll bar styles */
+
+::-webkit-scrollbar {
+  width:5px;
+}
+
+::-webkit-scrollbar-track {
+  background:#69696971;
+}
+
+::-webkit-scrollbar-thumb {
+  background:  #797878;
+}

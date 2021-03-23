@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 //	Importing pages
 import { Join } from "./pages/Join";
-import { Direct } from "./pages/Direct";
-import { Group } from "./pages/Group";
+import { Direct } from "./pages/Chat/Direct";
+import { Group } from "./pages/Chat/Group";
 import { Home } from "./pages/Website/Home";
 import { NotFound } from "./pages/Website/NotFound";
 
@@ -19,7 +19,7 @@ export const Routes = () => {
 				<Route exact path="/" component={Home} />
 				<Route
 					exact path="/join"
-					component={() => <Join user={user} setUser={setUser} />}
+					component={() => <Join setUser={setUser} />}
 				/>
 				<Route
 					exact path="/direct"
