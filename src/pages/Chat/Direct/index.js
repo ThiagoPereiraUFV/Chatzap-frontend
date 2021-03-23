@@ -10,6 +10,7 @@ import { Container } from "react-bootstrap";
 let socket;
 
 export const Direct = ({ user }) => {
+	const [online, setOnline] = useState(false);
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 
@@ -38,7 +39,11 @@ export const Direct = ({ user }) => {
 		socket.on("message", (message) => {
 			setMessages(messages => [ ...messages, message ]);
 		});
-	}, []);
+
+		socket.on("groupData", ({ users }) => {
+			setOnline(users.find((u) => u?.number === user?.numberDirect) ? true : false);
+    });
+	}, [user]);
 
 	function sendMessage(event) {
 		event.preventDefault();
@@ -50,8 +55,8 @@ export const Direct = ({ user }) => {
 
 	return (
 		<Container className="d-flex p-0 h-100 flex-column" fluid>
-			<Infobar room={user?.nameDirect ?? "Messagem direta"} />
-			<Messages messages={messages} number={user?.number} />
+			<Infobar room={user?.nameDirect ?? "Messagem direta"} online={online} />
+			<Messages messages={messages} number={user?.number} numberDirect={user?.numberDirect} />
 			<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 		</Container>
 	);

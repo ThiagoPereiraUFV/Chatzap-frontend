@@ -20,7 +20,7 @@ export const Input = ({ setMessage, sendMessage, message }) => (
 					<Button
 						variant="success"
 						type="submit"
-						className="d-flex rounded-circle mx-1"
+						className="rounded-circle mx-1"
 						disabled={!message || !message.length}
 					>
 						<RiSendPlaneFill className="m-auto" size="25" />

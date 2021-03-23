@@ -1,6 +1,8 @@
 import { Jumbotron, Col, Row, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+import { Footer } from "../../../components/Footer";
+
 import zap from "../../../assets/zap.ico";
 
 //	Exporting Home page
@@ -13,7 +15,7 @@ export const Home = () => (
 				<Image height="70" src={zap} />
 			</Row>
 			<hr className="my-3"/>
-			<p>Entre em um grupo agora</p>
+			<p>Entre em um grupo</p>
 			<p className="lead">
 				<Link
 					to="/joinGroup"
@@ -38,5 +40,6 @@ export const Home = () => (
 				</Link>
 			</p>
 		</Jumbotron>
+		<Footer />
 	</div>
 );

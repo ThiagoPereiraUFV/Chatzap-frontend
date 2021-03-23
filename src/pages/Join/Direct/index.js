@@ -4,6 +4,8 @@ import { useHistory } from "react-router-dom";
 //	Importing React Bootstrap features
 import { Container, Form, Button, Col, Row } from "react-bootstrap";
 
+import { Footer } from "../../../components/Footer";
+
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
@@ -103,6 +105,7 @@ export const JoinDirect = ({ setUser }) => {
 					</Row>
 				</Form>
 			</Col>
+			<Footer />
 		</Container>
 	);
 }

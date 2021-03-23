@@ -1,6 +1,6 @@
 //	Importing React and Router resouces
 import React, { useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 //	Importing pages
 import { JoinDirect } from "./pages/Join/Direct";
@@ -28,11 +28,11 @@ export const Routes = () => {
 				/>
 				<Route
 					exact path="/direct"
-					component={() => <Direct user={user} />}
+					component={() => user ? <Direct user={user} /> : <Redirect to="/joinDirect" />}
 				/>
 				<Route
 					exact path="/group"
-					component={() => <Group user={user} />}
+					component={() => user ? <Group user={user} /> : <Redirect to="/joinGroup" />}
 				/>
 				<Route path="*" component={NotFound} status={404} />
 			</Switch>
