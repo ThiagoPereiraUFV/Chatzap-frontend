@@ -1,5 +1,6 @@
 //  Importing React and socket.io resources
 import { useState, useEffect } from "react";
+import { Prompt } from "react-router-dom";
 import io from "socket.io-client";
 
 import { motion } from "framer-motion";
@@ -64,6 +65,7 @@ export const Direct = ({ user }) => {
 			animate={{ opacity: 1 }}
 			transition={{ ease: "easeOut", duration: 2 }}
 		>
+			<Prompt message="Você será desconectado, continuar?" when={true} />
 			<Infobar room={user?.nameDirect ?? "Messagem direta"} online={online} />
 			<Messages messages={messages} number={user?.number} numberDirect={user?.numberDirect} />
 			<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />

@@ -1,5 +1,6 @@
 //  Importing React and socket.io resources
 import { useState, useEffect } from "react";
+import { Prompt } from "react-router-dom";
 import io from "socket.io-client";
 
 import { Container } from "react-bootstrap";
@@ -65,6 +66,7 @@ export const Group = ({ user }) => {
 			animate={{ opacity: 1 }}
 			transition={{ ease: "easeOut", duration: 2 }}
 		>
+			<Prompt message="Você será desconectado, continuar?" when={true} />
 			<Infobar room={user?.group} />
 			<Messages messages={messages} number={user?.number} />
 			<Input setMessage={setMessage} sendMessage={sendMessage} message={message} />
