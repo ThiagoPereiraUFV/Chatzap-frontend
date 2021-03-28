@@ -51,9 +51,8 @@ export const JoinGroup = ({ setUser }) => {
 		<motion.div
 			as={Container}
 			className="m-auto w-100"
-			initial={{ opacity: 0, x: -500 }}
+			initial={{ opacity: 1}}
 			exit={{ opacity: 0 }}
-			animate={{ opacity: 1, x: 0 }}
 		>
 			<Col className="m-auto" lg="3" md="6">
 				<Form onSubmit={join}>
