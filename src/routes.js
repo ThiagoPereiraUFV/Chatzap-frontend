@@ -5,10 +5,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 //	Importing pages
-import { JoinDirect } from "./pages/Join/Direct";
-import { JoinGroup } from "./pages/Join/Group";
-import { Direct } from "./pages/Chat/Direct";
-import { Group } from "./pages/Chat/Group";
+import { Chat } from "./pages/Chat";
 import { Login } from "./pages/User/Login";
 import { Signup } from "./pages/User/Signup";
 import { Home } from "./pages/Website/Home";
@@ -70,28 +67,8 @@ export const Routes = () => {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route
-						exact path="/joinDirect"
-						component={() => userAuth ?
-						<JoinDirect user={user} />
-						:
-						<Redirect to="/login?r=joinDirect" />
-					}
-					/>
-					<Route
-						exact path="/joinGroup"
-						component={() => userAuth ?
-						<JoinGroup user={user} />
-						:
-						<Redirect to="/login?r=joinGroup" />
-					}
-					/>
-					<Route
-						exact path="/direct"
-						component={() => userAuth ? <Direct user={user} /> : <Redirect to="/signup?=direct" />}
-					/>
-					<Route
-						exact path="/group"
-						component={() => userAuth ? <Group user={user} /> : <Redirect to="/signup?r=group" />}
+						exact path="/chat"
+						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=group" />}
 					/>
 					<Route
 						path="/login"
