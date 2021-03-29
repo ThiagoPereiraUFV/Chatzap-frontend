@@ -68,7 +68,11 @@ export const Routes = () => {
 					<Route exact path="/" component={() => <Home userId={userId} />} />
 					<Route
 						exact path="/chat"
-						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=chat" />}
+						component={() => userAuth ?
+							<Chat user={user} userId={userId} setUserId={setUserId} setUser={setUser} />
+							:
+							<Redirect to="/login?r=chat" />
+						}
 					/>
 					<Route
 						path="/login"

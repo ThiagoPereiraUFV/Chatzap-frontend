@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 
@@ -28,34 +28,52 @@ export const Infobar = {
       </Nav>
     </Navbar>
   ),
-  Chats: () => (
-    <Navbar className="m-0" bg="secondary" variant="light" sticky="top">
-      <Nav className="mr-auto">
-        <Nav.Item>
-          <Navbar.Brand className="text-light font-weight-bold">Chatzap</Navbar.Brand>
-        </Nav.Item>
-        <Nav.Item>
-          <NavDropdown className="p-0">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-          </NavDropdown>
-        </Nav.Item>
-      </Nav>
-      <Nav className="ml-auto">
-        <Nav.Item>
-          <Nav.Link
-            as={Link}
-            to="/"
-            href="/"
-            className="p-0"
-          >
-            <RiLogoutCircleLine className="text-white" size="25" />
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
-    </Navbar>
-  )
+  Chats: ({ setUser, setUserId }) => {
+    //	Defining history to jump through pages
+    const history = useHistory();
+
+    //	Function to handle user logout
+    function handleLogout(event) {
+      event.preventDefault();
+
+      sessionStorage.removeItem("userId");
+      localStorage.removeItem("userId");
+      setUserId("");
+      setUser(null);
+
+      history.push("/");
+    }
+
+    return (
+      <Navbar className="m-0" bg="secondary" variant="light" sticky="top">
+        <Nav className="mr-auto">
+          <Nav.Item>
+            <Navbar.Brand className="text-light font-weight-bold">Chatzap</Navbar.Brand>
+          </Nav.Item>
+          <Nav.Item>
+            <NavDropdown className="p-0">
+              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+            </NavDropdown>
+          </Nav.Item>
+        </Nav>
+        <Nav className="ml-auto">
+          <Nav.Item>
+            <Nav.Link
+              as={Link}
+              to="#"
+              href="#"
+              className="p-0"
+              onClick={handleLogout}
+            >
+              <RiLogoutCircleLine className="text-white" size="25" />
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+      </Navbar>
+    );
+  }
 }

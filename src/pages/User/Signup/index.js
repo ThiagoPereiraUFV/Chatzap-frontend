@@ -57,7 +57,7 @@ export const Signup = ({ setUser, setUserId, location }) => {
 					setUserId(response.data.token);
 					setUser(response.data.user);
 
-					history.push(`/${redirect ?? ""}`);
+					history.push(`/${redirect ?? "chat"}`);
 				}
 			}).catch((error) => {
 				setTitle("Erro!");
