@@ -68,7 +68,7 @@ export const Routes = () => {
 					<Route exact path="/" component={Home} />
 					<Route
 						exact path="/chat"
-						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=group" />}
+						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=chat" />}
 					/>
 					<Route
 						path="/login"
