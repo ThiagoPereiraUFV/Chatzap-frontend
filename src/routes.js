@@ -65,7 +65,7 @@ export const Routes = () => {
 		<AnimatePresence exitBeforeEnter>
 			<BrowserRouter>
 				<Switch>
-					<Route exact path="/" component={Home} />
+					<Route exact path="/" component={() => <Home userId={userId} />} />
 					<Route
 						exact path="/chat"
 						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=chat" />}
