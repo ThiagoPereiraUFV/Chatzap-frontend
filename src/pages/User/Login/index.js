@@ -55,7 +55,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 				}
 			}).catch((error) => {
 				setTitle("Erro!");
-				if(error.response && error.response.status === 400) {
+				if(error.response && [400, 404].includes(error.response.status)) {
 					const messages = error.response.data;
 					setMessage(messages.errors ? messages.errors.join(", ") : messages);
 				} else if(error.response && error.response.status === 500) {
