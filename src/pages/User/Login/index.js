@@ -107,7 +107,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 						</Form.Group>
 						<Col className="text-center my-2" sm="12">
 							<small>Não tem conta? </small>
-							<Link className="text-success" to="/signup">
+							<Link className="text-success" to={`/signup?r=${redirect ?? "chat"}`}>
 								<small>Clique aqui</small>
 							</Link>
 							<small> para se cadastrar</small>

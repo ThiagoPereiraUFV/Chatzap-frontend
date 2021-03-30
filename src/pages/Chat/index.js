@@ -1,6 +1,5 @@
 //  Importing React and socket.io resources
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
 
 import { Col, Container } from "react-bootstrap";
 
@@ -12,8 +11,6 @@ import { Messages } from "../../components/Messages";
 
 //	Importing api to communicate to backend
 import api from "../../services/api";
-
-let socket;
 
 export const Chat = ({ user, userId, setUser, setUserId }) => {
 	const [online, setOnline] = useState(false);
@@ -40,27 +37,6 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 
 		fetchData();
 	}, [userId]);
-
-	useEffect(() => {
-		// socket = io.connect(process.env.REACT_APP_ENDPOINT, {
-		// 	"force new connection" : true,
-		// 	"reconnectionAttempts": "Infinity",
-		// 	"timeout" : 10000,
-		// 	"transports" : ["websocket"]
-		// });
-
-		// socket.emit("joinDirect", {
-		// 	name: user?.name,
-		// 	number: user?.number,
-		// 	numberDirect: user?.numberDirect
-		// }, (error) => {
-		// 	if(error) {
-    //     alert(error);
-    //   }
-		// });
-
-		// return () => socket.disconnect();
-	}, [user]);
 
 	useEffect(() => {
 		// socket.on("message", (message) => {

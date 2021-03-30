@@ -1,6 +1,9 @@
-//	Importing React and Router resouces
+//	Importing React and Router resources
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+
+//	Importing socket resources
+import io from "socket.io-client";
 
 import { AnimatePresence } from "framer-motion";
 
@@ -17,9 +20,12 @@ import { Loading } from "./components/Loading";
 //	Importing api to communicate to backend
 import api from "./services/api";
 
+//	Socket variable
+let socket;
+
 //	Exporting Routes
 export const Routes = () => {
-	//	User and session state variables
+	//	User state variables
 	const [userId, setUserId] = useState(sessionStorage.getItem("userId")?.length ?
 		sessionStorage.getItem("userId")
 		:
@@ -30,6 +36,7 @@ export const Routes = () => {
 	//	Loading component state variable
 	const [isLoading, setLoading] = useState(true);
 
+	//	Get logged user data
 	useEffect(() => {
 		async function fetchData() {
 			if(userId && userId.length) {
@@ -54,6 +61,24 @@ export const Routes = () => {
 
 		fetchData();
 	}, [userId]);
+
+	// //	Socket connection
+	// useEffect(() => {
+	// 	socket = io.connect(process.env.REACT_APP_ENDPOINT, {
+	// 		"force new connection" : true,
+	// 		"reconnectionAttempts": "Infinity",
+	// 		"timeout" : 10000,
+	// 		"transports" : ["websocket"]
+	// 	});
+
+	// 	socket.emit("general", user, (error) => {
+	// 		if(error) {
+  //       alert(error);
+  //     }
+	// 	});
+
+	// 	return () => socket.disconnect();
+	// }, [user]);
 
 	const userAuth = user && user._id && userId && userId.length;
 
