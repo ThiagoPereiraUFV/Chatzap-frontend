@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 //	Importing socket resources
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 import { AnimatePresence } from "framer-motion";
 
@@ -21,7 +21,7 @@ import { Loading } from "./components/Loading";
 import api from "./services/api";
 
 //	Socket variable
-let socket;
+// let socket;
 
 //	Exporting Routes
 export const Routes = () => {
@@ -73,8 +73,8 @@ export const Routes = () => {
 
 	// 	socket.emit("general", user, (error) => {
 	// 		if(error) {
-  //       alert(error);
-  //     }
+	//       alert(error);
+	//     }
 	// 	});
 
 	// 	return () => socket.disconnect();
@@ -120,4 +120,4 @@ export const Routes = () => {
 			</BrowserRouter>
 		</AnimatePresence>
 	);
-}
+};

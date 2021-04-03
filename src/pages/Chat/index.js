@@ -45,7 +45,7 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 
 		// socket.on("groupData", ({ users }) => {
 		// 	setOnline(users.find((u) => u?.number === user?.numberDirect) ? true : false);
-    // });
+		// });
 	}, [user]);
 
 	function sendMessage(event) {
@@ -78,4 +78,4 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 			</Col>
 		</Container>
 	);
-}
+};

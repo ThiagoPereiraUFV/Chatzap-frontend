@@ -9,7 +9,7 @@ export function Footer() {
 	return (
 		<div className="d-flex justify-content-center align-items-end flex-row flex-wrap mt-5 py-1">
 			<Col className="text-center p-0 m-0" sm={"auto"}>
-				Copyright &#169; {" " + (new Date()).getFullYear() + " |"}
+				Copyright &#169; {` ${(new Date()).getFullYear()} |`}
 			</Col>
 			<Col className="text-center p-0 m-0 ml-1" sm={"auto"}>
 				{"Desenvolvido por "}

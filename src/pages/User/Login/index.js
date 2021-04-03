@@ -102,7 +102,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 								type="switch"
 								label="Lembrar de mim?"
 								checked={rememberMe}
-								onChange={e => setRememberMe(e.target.checked)}
+								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
 						</Form.Group>
 						<Col className="text-center my-2" sm="12">
@@ -126,4 +126,4 @@ export const Login = ({ setUser, setUserId, location }) => {
 			</Col>
 		</motion.div>
 	);
-}
+};

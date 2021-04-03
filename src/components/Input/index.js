@@ -10,7 +10,7 @@ export const Input = ({ setMessage, sendMessage, message }) => (
 				<Form.Control
 					as="textarea"
 					rows="1"
-					style={{ resize :"none", borderRadius: "30px" }}
+					style={{ resize: "none", borderRadius: "30px" }}
 					className="py-3"
 					placeholder="Digite sua mensagem"
 					value={message}
