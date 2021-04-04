@@ -8,7 +8,7 @@ export const Chats = ({ chats, setChat }) => (
 					className="d-flex justify-content-between btn border rounded-0 py-4"
 					onClick={() => setChat(chat)}
 				>
-					<Col className="p-0" sm="6">
+					<Col className="p-0 text-left" sm="6">
 						{chat?.roomId?.name ?? chat?.name}
 					</Col>
 					<Badge
