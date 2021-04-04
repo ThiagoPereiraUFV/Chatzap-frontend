@@ -27,10 +27,10 @@ import api from "./services/api";
 //	Exporting Routes
 export const Routes = () => {
 	//	User state variables
-	const [userId, setUserId] = useState(sessionStorage.getItem("userId")?.length ?
-		sessionStorage.getItem("userId")
+	const [userToken, setUserToken] = useState(sessionStorage.getItem("userToken")?.length ?
+		sessionStorage.getItem("userToken")
 		:
-		localStorage.getItem("userId")
+		localStorage.getItem("userToken")
 	);
 	const [user, setUser] = useState(null);
 
@@ -40,20 +40,20 @@ export const Routes = () => {
 	//	Get logged user data
 	useEffect(() => {
 		async function fetchData() {
-			if(userId && userId.length) {
+			if(userToken && userToken.length) {
 				await api.get("/session", {
 					headers: {
-						"X-Access-Token": userId
+						"X-Access-Token": userToken
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
 						setUser(response.data);
 					}
 				}).catch(() => {
-					setUserId("");
+					setUserToken("");
 					setUser(null);
-					sessionStorage.removeItem("userId");
-					localStorage.removeItem("userId");
+					sessionStorage.removeItem("userToken");
+					localStorage.removeItem("userToken");
 				});
 			}
 
@@ -61,7 +61,7 @@ export const Routes = () => {
 		}
 
 		fetchData();
-	}, [userId]);
+	}, [userToken]);
 
 	// //	Socket connection
 	// useEffect(() => {
@@ -81,7 +81,7 @@ export const Routes = () => {
 	// 	return () => socket.disconnect();
 	// }, [user]);
 
-	const userAuth = user && user._id && userId && userId.length;
+	const userAuth = user && user._id && userToken && userToken.length;
 
 	if(isLoading) {
 		return (<Loading />);
@@ -91,11 +91,11 @@ export const Routes = () => {
 		<AnimatePresence exitBeforeEnter>
 			<BrowserRouter>
 				<Switch>
-					<Route exact path="/" component={() => <Home userId={userId} />} />
+					<Route exact path="/" component={() => <Home userToken={userToken} />} />
 					<Route
 						exact path="/chat"
 						component={() => userAuth ?
-							<Chat user={user} userId={userId} setUserId={setUserId} setUser={setUser} />
+							<Chat user={user} userToken={userToken} setUserToken={setUserToken} setUser={setUser} />
 							:
 							<Redirect to="/login?r=chat" />
 						}
@@ -103,17 +103,17 @@ export const Routes = () => {
 					<Route
 						path="/login"
 						component={({ location }) => !userAuth ?
-							<Login setUser={setUser} setUserId={setUserId} location={location} />
+							<Login setUser={setUser} setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/" />
+							<Redirect to="/chat" />
 						}
 					/>
 					<Route
 						path="/signup"
 						component={({ location }) => !userAuth ?
-							<Signup setUser={setUser} setUserId={setUserId} location={location} />
+							<Signup setUser={setUser} setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/" />
+							<Redirect to="/chat" />
 						}
 					/>
 					<Route path="*" component={NotFound} />

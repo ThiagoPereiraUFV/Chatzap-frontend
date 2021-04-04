@@ -15,7 +15,7 @@ import { Push } from "../../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
-export const Login = ({ setUser, setUserId, location }) => {
+export const Login = ({ setUser, setUserToken, location }) => {
 	//	User state variables
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
@@ -43,12 +43,12 @@ export const Login = ({ setUser, setUserId, location }) => {
 			.then((response) => {
 				if(response && response.status === 201) {
 					if(rememberMe) {
-						localStorage.setItem("userId", response.data.token);
+						localStorage.setItem("userToken", response.data.token);
 					} else {
-						sessionStorage.setItem("userId", response.data.token);
+						sessionStorage.setItem("userToken", response.data.token);
 					}
 
-					setUserId(response.data.token);
+					setUserToken(response.data.token);
 					setUser(response.data.user);
 
 					history.push(`/${redirect ?? "chat"}`);
@@ -84,6 +84,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 								placeholder="ex. (31) 99999-9999"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
+								autoFocus
 								required
 							/>
 						</Form.Group>

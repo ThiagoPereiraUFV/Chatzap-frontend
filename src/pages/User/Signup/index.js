@@ -15,7 +15,7 @@ import { Push } from "../../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
-export const Signup = ({ setUser, setUserId, location }) => {
+export const Signup = ({ setUser, setUserToken, location }) => {
 	//	User state variables
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
@@ -49,12 +49,12 @@ export const Signup = ({ setUser, setUserId, location }) => {
 			.then((response) => {
 				if(response && response.status === 201) {
 					if(rememberMe) {
-						localStorage.setItem("userId", response.data.token);
+						localStorage.setItem("userToken", response.data.token);
 					} else {
-						sessionStorage.setItem("userId", response.data.token);
+						sessionStorage.setItem("userToken", response.data.token);
 					}
 
-					setUserId(response.data.token);
+					setUserToken(response.data.token);
 					setUser(response.data.user);
 
 					history.push(`/${redirect ?? "chat"}`);

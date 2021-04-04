@@ -12,7 +12,7 @@ import { Messages } from "../../components/Messages";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ user, userId, setUser, setUserId }) => {
+export const Chat = ({ user, userToken, setUser, setUserToken }) => {
 	const [online, setOnline] = useState(false);
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -26,7 +26,7 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 			if(query && query.length) {
 				await api.get(`/searchRoom?q=${query}`, {
 					headers: {
-						"X-Access-Token": userId
+						"X-Access-Token": userToken
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
@@ -38,7 +38,7 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 			} else {
 				await api.get("/userRoom", {
 					headers: {
-						"X-Access-token": userId
+						"X-Access-token": userToken
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
@@ -51,7 +51,7 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 		}
 
 		fetchData();
-	}, [userId, query]);
+	}, [userToken, query]);
 
 	useEffect(() => {
 		// socket.on("message", (message) => {
@@ -76,7 +76,7 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 			<Col className="bg-light m-0 p-0" style={{ overflowY: "scroll" }} sm="3">
 				<Infobar.Chats
 					room={user?.nameDirect ?? "Messagem direta"}
-					setUserId={setUserId}
+					setUserToken={setUserToken}
 					setUser={setUser}
 				/>
 				<Query query={query} setQuery={setQuery} />

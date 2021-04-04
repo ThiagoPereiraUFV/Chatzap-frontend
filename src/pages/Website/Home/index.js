@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import zap from "../../../assets/zap.ico";
 
 //	Exporting Home page
-export const Home = ({ userId }) => (
+export const Home = ({ userToken }) => (
 	<motion.div
 		as={Container}
 		className="my-auto px-4"
@@ -22,7 +22,7 @@ export const Home = ({ userId }) => (
 				<Image height="70" src={zap} />
 			</Row>
 			<hr className="my-3"/>
-			{userId && userId.length ?
+			{userToken && userToken.length ?
 				<>
 					<p>Converse agora</p>
 					<p className="lead">
