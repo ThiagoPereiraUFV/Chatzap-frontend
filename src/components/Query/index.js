@@ -1,8 +1,8 @@
 import { Form } from "react-bootstrap";
 
 
-export const Query = ({ query, setQuery, handleQueryChat }) => (
-	<Form onSubmit={handleQueryChat}>
+export const Query = ({ query, setQuery }) => (
+	<Form onSubmit={(e) => e.preventDefault()}>
 		<Form.Group className="m-1 h-100" controlId="input">
 			<Form.Control
 				type="text"
@@ -10,7 +10,8 @@ export const Query = ({ query, setQuery, handleQueryChat }) => (
 				placeholder="Busque aqui"
 				value={query}
 				onChange={(e) => setQuery(e.target.value)}
-				required
+				maxLength="50"
+				autoComplete="off"
 			/>
 		</Form.Group>
 	</Form>

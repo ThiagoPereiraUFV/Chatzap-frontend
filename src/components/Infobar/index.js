@@ -63,7 +63,7 @@ export const Infobar = {
 				<Nav className="ml-auto">
 					<Nav.Item>
 						<Link
-							href="#"
+							to="#"
 							className="p-0"
 							onClick={handleLogout}
 						>

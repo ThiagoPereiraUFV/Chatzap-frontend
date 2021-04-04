@@ -18,25 +18,40 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 	const [messages, setMessages] = useState([]);
 	const [query, setQuery] = useState("");
 	const [chats, setChats] = useState([]);
+	const [chat, setChat] = useState({});
 
 	//	Get user chats
 	useEffect(() => {
 		async function fetchData() {
-			await api.get("/userRoom", {
-				headers: {
-					"X-Access-token": userId
-				}
-			}).then((response) => {
-				if(response && response.status === 200) {
-					setChats(response.data);
-				}
-			}).catch(() => {
-				setChats([]);
-			});
+			if(query && query.length) {
+				await api.get(`/searchRoom?q=${query}`, {
+					headers: {
+						"X-Access-Token": userId
+					}
+				}).then((response) => {
+					if(response && response.status === 200) {
+						setChats(response.data);
+					}
+				}).catch(() => {
+					setChats([]);
+				});
+			} else {
+				await api.get("/userRoom", {
+					headers: {
+						"X-Access-token": userId
+					}
+				}).then((response) => {
+					if(response && response.status === 200) {
+						setChats(response.data);
+					}
+				}).catch(() => {
+					setChats([]);
+				});
+			}
 		}
 
 		fetchData();
-	}, [userId]);
+	}, [userId, query]);
 
 	useEffect(() => {
 		// socket.on("message", (message) => {
@@ -56,10 +71,6 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 		}
 	}
 
-	function handleQueryChat(event) {
-		event.preventDefault();
-	}
-
 	return (
 		<Container className="d-flex p-0 h-100 flex-row" fluid>
 			<Col className="bg-light m-0 p-0" style={{ overflowY: "scroll" }} sm="3">
@@ -68,8 +79,8 @@ export const Chat = ({ user, userId, setUser, setUserId }) => {
 					setUserId={setUserId}
 					setUser={setUser}
 				/>
-				<Query query={query} setQuery={setQuery} handleQueryChat={handleQueryChat} />
-				<Chats chats={chats} />
+				<Query query={query} setQuery={setQuery} />
+				<Chats chats={chats} setChat={setChat} />
 			</Col>
 			<Col className="d-flex p-0 flex-column" sm="9">
 				<Infobar.Chat room={user?.nameDirect ?? "Messagem direta"} online={online} />

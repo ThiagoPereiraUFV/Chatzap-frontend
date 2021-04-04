@@ -2,9 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
-//	Importing socket resources
-// import io from "socket.io-client";
-
+//	Importing framer motion resources
 import { AnimatePresence } from "framer-motion";
 
 //	Importing pages
@@ -16,6 +14,9 @@ import { NotFound } from "./pages/Website/NotFound";
 
 //	Importing components
 import { Loading } from "./components/Loading";
+
+//	Importing socket resources
+// import io from "socket.io-client";
 
 //	Importing api to communicate to backend
 import api from "./services/api";
@@ -115,7 +116,7 @@ export const Routes = () => {
 							<Redirect to="/" />
 						}
 					/>
-					<Route path="*" component={NotFound} status={404} />
+					<Route path="*" component={NotFound} />
 				</Switch>
 			</BrowserRouter>
 		</AnimatePresence>

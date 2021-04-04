@@ -3,8 +3,8 @@ import axios from "axios";
 
 //	Exporting connection to backend
 export default axios.create({
-	baseURL: process.env.REACT_APP_ENDPOINT
+	baseURL: process.env.REACT_APP_API_URL
 });
 
-//	REACT_APP_ENDPOINT=https://chatzap.herokuapp.com/
-//	REACT_APP_ENDPOINT=http://localhost:4000/
+//	REACT_APP_API_URL=https://chatzap.herokuapp.com/
+//	REACT_APP_API_URL=http://localhost:4000/
