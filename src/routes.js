@@ -16,13 +16,13 @@ import { NotFound } from "./pages/Website/NotFound";
 import { Loading } from "./components/Loading";
 
 //	Importing socket resources
-// import io from "socket.io-client";
+import io from "socket.io-client";
 
 //	Importing api to communicate to backend
 import api from "./services/api";
 
 //	Socket variable
-// let socket;
+let socket = null;
 
 //	Exporting Routes
 export const Routes = () => {
@@ -63,23 +63,26 @@ export const Routes = () => {
 		fetchData();
 	}, [userToken]);
 
-	// //	Socket connection
-	// useEffect(() => {
-	// 	socket = io.connect(process.env.REACT_APP_ENDPOINT, {
-	// 		"force new connection" : true,
-	// 		"reconnectionAttempts": "Infinity",
-	// 		"timeout" : 10000,
-	// 		"transports" : ["websocket"]
-	// 	});
+	//	Socket connection
+	useEffect(() => {
+		if(user) {
+			socket = io.connect(process.env.REACT_APP_API_URL, {
+				"force new connection": true,
+				reconnectionAttempts: "Infinity",
+				timeout: 10000,
+				transports: ["websocket"]
+			});
 
-	// 	socket.emit("general", user, (error) => {
-	// 		if(error) {
-	//       alert(error);
-	//     }
-	// 	});
+			socket.emit("online", user._id, (error) => {
+				if(error) {
+					alert(error);
+				}
+			});
 
-	// 	return () => socket.disconnect();
-	// }, [user]);
+			return () => socket.disconnect();
+		}
+
+	}, [user]);
 
 	const userAuth = user && user._id && userToken && userToken.length;
 
