@@ -26,7 +26,7 @@ export const Chat = ({ user, userToken, setUser, setUserToken }) => {
 			if(query && query.length) {
 				await api.get(`/searchRoom?q=${query}`, {
 					headers: {
-						"X-Access-Token": userToken
+						Authorization: `Bearer ${userToken}`
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
@@ -38,7 +38,7 @@ export const Chat = ({ user, userToken, setUser, setUserToken }) => {
 			} else {
 				await api.get("/userRoom", {
 					headers: {
-						"X-Access-token": userToken
+						Authorization: `Bearer ${userToken}`
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {

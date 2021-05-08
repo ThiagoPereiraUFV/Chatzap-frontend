@@ -43,7 +43,7 @@ export const Routes = () => {
 			if(userToken && userToken.length) {
 				await api.get("/session", {
 					headers: {
-						"X-Access-Token": userToken
+						Authorization: `Bearer ${userToken}`
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
