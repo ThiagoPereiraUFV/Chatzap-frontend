@@ -25,7 +25,7 @@ export const Signup = ({ setUser, setUserToken, location }) => {
 	const [rememberMe, setRememberMe] = useState(false);
 
 	//	Message settings
-	const [toastShow, setToastShow] = useState(false);
+	const [pushShow, setPushShow] = useState(false);
 	const [title, setTitle] = useState("");
 	const [message, setMessage] = useState("");
 
@@ -67,7 +67,7 @@ export const Signup = ({ setUser, setUserToken, location }) => {
 				} else if(error.response && error.response.status === 500) {
 					setMessage(error.message);
 				}
-				setToastShow(true);
+				setPushShow(true);
 			});
 	}
 
@@ -79,7 +79,7 @@ export const Signup = ({ setUser, setUserToken, location }) => {
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1, x: 0 }}
 		>
-			<Push.Top toastShow={toastShow} setToastShow={setToastShow} message={message} title={title} />
+			<Push.Top pushShow={pushShow} setPushShow={setPushShow} message={message} title={title} />
 			<Col className="m-auto" lg="8" md="6">
 				<Form onSubmit={handleSignup}>
 					<Row>

@@ -28,7 +28,7 @@ export const Infobar = {
 			</Nav>
 		</Navbar>
 	),
-	Chats: ({ setUser, setUserToken }) => {
+	Chats: ({ setUser, setUserToken, actions }) => {
 		//	Defining history to jump through pages
 		const history = useHistory();
 
@@ -52,11 +52,11 @@ export const Infobar = {
 					</Nav.Item>
 					<Nav.Item>
 						<NavDropdown className="p-0">
-							<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-							<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-							<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-							<NavDropdown.Divider />
-							<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+							{actions?.map((action, index) => (
+								<NavDropdown.Item key={index} href={`#action/${index}`} onClick={() => action?.func(true)}>
+									{action?.name}
+								</NavDropdown.Item>
+							))}
 						</NavDropdown>
 					</Nav.Item>
 				</Nav>
