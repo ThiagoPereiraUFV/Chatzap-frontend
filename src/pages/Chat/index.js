@@ -114,7 +114,7 @@ export const Chat = ({ user, userToken, setUser, setUserToken }) => {
 			<Push.Top
 				pushShow={pushShow}
 				setPushShow={setPushShow}
-				title={"titlePush"}
+				title={titlePush}
 				message={messagePush}
 			/>
 			<Col className="bg-light m-0 p-0" style={{ overflowY: "scroll" }} sm="3">
