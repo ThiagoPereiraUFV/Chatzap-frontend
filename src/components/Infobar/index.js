@@ -5,21 +5,12 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { RiCloseFill, RiLogoutCircleLine } from "react-icons/ri";
 
 export const Infobar = {
-	Chat: ({ room, online, setChat }) => (
+	Chat: ({ room, setChat }) => (
 		<Navbar className="m-0" bg="success" variant="light" sticky="top">
 			<Nav className="mr-auto">
 				<Nav.Item>
 					<Navbar.Brand className="text-light font-weight-bold">{room}</Navbar.Brand>
 				</Nav.Item>
-				{typeof(online) === "boolean" ?
-					<Nav.Item className="d-flex">
-						<small className="m-auto text-light">
-							{online ? "online" : "offline"}
-						</small>
-					</Nav.Item>
-					:
-					null
-				}
 			</Nav>
 			<Nav className="ml-auto">
 				<Nav.Item className="btn" onClick={() => setChat(null)}>

@@ -16,10 +16,9 @@ import { Push } from "../../components/Push";
 import api from "../../services/api";
 
 export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
-	const [online, setOnline] = useState(false);
+	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [query, setQuery] = useState("");
 	const [chats, setChats] = useState([]);
 	const [chat, setChat] = useState(null);
 
@@ -126,7 +125,6 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 		}).catch((error) => {
 			setTitlePush("Erro!");
 			if(error.response && [401, 403, 404].includes(error.response.status)) {
-				console.log(error.response.data);
 				setMessagePush(error.response.data);
 			} else if(error.response && [400].includes(error.response.status)) {
 				const errorMessages = error.response.data;
@@ -174,10 +172,9 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 								name: "Criar sala"
 							}, {
 								func: setEnterRoomModal,
-								name: "Entrar em um sala"
+								name: "Entrar em uma sala"
 							}
 						]}
-					room={user?.nameDirect ?? "Messagem direta"}
 					setUserToken={setUserToken}
 					setUser={setUser}
 				/>
@@ -186,7 +183,7 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId?.name} online={online} setChat={setChat} />
+					<Infobar.Chat room={chat?.roomId?.name} setChat={setChat} />
 					<Messages messages={messages} userPhone={user?.phone} />
 					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
