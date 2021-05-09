@@ -127,7 +127,7 @@ export const Signup = ({ setUser, setUserToken, location }) => {
 						<Form.Group as={Col} controlId="passwordC" sm="6">
 							<Form.Label>Confirme sua senha</Form.Label>
 							<Form.Control
-								type="passwordC"
+								type="password"
 								placeholder="Confirmação da senha"
 								value={passwordC}
 								onChange={(e) => setPasswordC(e.target.value)}

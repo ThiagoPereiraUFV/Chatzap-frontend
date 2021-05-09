@@ -8,13 +8,13 @@ export const Input = ({ setMessage, sendMessage, message }) => (
 		<Form.Group className="m-0 h-100" controlId="message">
 			<Row className="px-2 py-2 m-auto flex-nowrap">
 				<Form.Control
-					as="textarea"
-					rows="1"
-					style={{ resize: "none", borderRadius: "30px" }}
-					className="py-3"
+					type="text"
+					size="lg"
+					style={{ borderRadius: "30px" }}
 					placeholder="Digite sua mensagem"
 					value={message}
 					onChange={(e) => setMessage(e.target.value)}
+					autoComplete="off"
 					autoFocus
 				/>
 				<Button

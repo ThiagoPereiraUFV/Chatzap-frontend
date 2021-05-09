@@ -3,7 +3,7 @@ import { Modal, Form, Button } from "react-bootstrap";
 export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, setEnterRoomModal }) => (
 	<Modal size="md" show={enterRoomModal} onHide={() => setEnterRoomModal(false)} centered>
 		<Modal.Header closeButton>
-			<Modal.Title>Criar sala</Modal.Title>
+			<Modal.Title>Entrar em uma sala</Modal.Title>
 		</Modal.Header>
 		<Modal.Body>
 			<Form className="my-3" onSubmit={(e) => {
@@ -32,7 +32,7 @@ export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, s
 				}}
 				disabled={!roomId?.length}
 			>
-				Criar
+				Entrar
 			</Button>
 		</Modal.Footer>
 	</Modal>
