@@ -65,13 +65,9 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 	}, [userToken, query]);
 
 	useEffect(() => {
-		// socket.on("message", (message) => {
-		// 	setMessages(messages => [ ...messages, message ]);
-		// });
-
-		// socket.on("groupData", ({ users }) => {
-		// 	setOnline(users.find((u) => u?.number === user?.numberDirect) ? true : false);
-		// });
+		socket.on("message", (receivedMsg) => {
+			setMessages((msgs) => [ ...msgs, receivedMsg ]);
+		});
 	}, [user]);
 
 	useEffect(() => {
@@ -117,7 +113,12 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 		event.preventDefault();
 
 		if(message) {
-			// socket.emit("sendMessage", message, () => setMessage(""));
+			socket.emit("sendMessage", {
+				message,
+				userId: user?._id,
+				roomId: chat?.roomId?._id
+			});
+			setMessage("");
 		}
 	}
 
