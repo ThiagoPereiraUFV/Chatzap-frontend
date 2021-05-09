@@ -98,7 +98,13 @@ export const Routes = () => {
 					<Route
 						exact path="/chat"
 						component={() => userAuth ?
-							<Chat user={user} userToken={userToken} setUserToken={setUserToken} setUser={setUser} />
+							<Chat
+								socket={socket}
+								user={user}
+								userToken={userToken}
+								setUserToken={setUserToken}
+								setUser={setUser}
+							/>
 							:
 							<Redirect to="/login?r=chat" />
 						}

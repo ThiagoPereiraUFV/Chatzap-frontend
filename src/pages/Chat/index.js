@@ -14,7 +14,7 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ user, userToken, setUser, setUserToken }) => {
+export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 	const [online, setOnline] = useState(false);
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -73,6 +73,18 @@ export const Chat = ({ user, userToken, setUser, setUserToken }) => {
 		// 	setOnline(users.find((u) => u?.number === user?.numberDirect) ? true : false);
 		// });
 	}, [user]);
+
+	useEffect(() => {
+		socket.emit("getMessages", chat?.roomId?._id, (error) => {
+			if(error) {
+				alert(error);
+			}
+		});
+
+		socket.on("messages", (roomMessages) => {
+			setMessages(roomMessages);
+		});
+	}, [chat]);
 
 	async function createRoom(event) {
 		event.preventDefault();
