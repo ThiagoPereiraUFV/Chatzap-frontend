@@ -142,7 +142,7 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 			</Col>
 			<Col className="d-flex p-0 flex-column" sm="9">
 				<Infobar.Chat room={user?.nameDirect ?? "Messagem direta"} online={online} />
-				<Messages messages={messages} number={user?.number} numberDirect={user?.numberDirect} />
+				<Messages messages={messages} userPhone={user?.phone} />
 				<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 			</Col>
 
