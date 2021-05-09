@@ -9,6 +9,7 @@ import { Input } from "../../components/Input";
 import { Query } from "../../components/Query";
 import { Messages } from "../../components/Messages";
 import { CreateRoomModal } from "../../components/CreateRoomModal";
+import { EnterRoomModal } from "../../components/EnterRoomModal";
 import { Push } from "../../components/Push";
 
 //	Importing api to communicate to backend
@@ -27,9 +28,11 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 	const [titlePush, setTitlePush] = useState("");
 	const [messagePush, setMessagePush] = useState("");
 
-	//	Create room state variables
+	//	Room state variables
 	const [roomName, setRoomName] = useState("");
+	const [roomId, setRoomId] = useState("");
 	const [createRoomModal, setCreateRoomModal] = useState(false);
+	const [enterRoomModal, setEnterRoomModal] = useState(false);
 
 	//	Get user chats
 	useEffect(() => {
@@ -91,11 +94,39 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setChats([...chats, response.data]);
+				setQuery(null);
 			}
 		}).catch((error) => {
 			setTitlePush("Erro!");
 			if(error.response && [401, 403].includes(error.response.status)) {
+				setMessagePush(error.response.data);
+			} else if(error.response && [400].includes(error.response.status)) {
+				const errorMessages = error.response.data;
+				setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
+			} else if(error.response && error.response.status === 500) {
+				setMessagePush(error.message);
+			}
+			setPushShow(true);
+		});
+
+		setRoomName("");
+	}
+
+	async function enterRoom(event) {
+		event.preventDefault();
+
+		await api.post(`/userRoom/${roomId}`, {}, {
+			headers: {
+				Authorization: `Bearer ${userToken}`
+			}
+		}).then((response) => {
+			if(response && response.status === 201) {
+				setQuery(null);
+			}
+		}).catch((error) => {
+			setTitlePush("Erro!");
+			if(error.response && [401, 403, 404].includes(error.response.status)) {
+				console.log(error.response.data);
 				setMessagePush(error.response.data);
 			} else if(error.response && [400].includes(error.response.status)) {
 				const errorMessages = error.response.data;
@@ -136,7 +167,16 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 				sm="3"
 			>
 				<Infobar.Chats
-					actions={[{ func: setCreateRoomModal, name: "Criar sala" }]}
+					actions={
+						[
+							{
+								func: setCreateRoomModal,
+								name: "Criar sala"
+							}, {
+								func: setEnterRoomModal,
+								name: "Entrar em um sala"
+							}
+						]}
 					room={user?.nameDirect ?? "Messagem direta"}
 					setUserToken={setUserToken}
 					setUser={setUser}
@@ -160,6 +200,14 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 				createRoom={createRoom}
 				createRoomModal={createRoomModal}
 				setCreateRoomModal={setCreateRoomModal}
+			/>
+
+			<EnterRoomModal
+				roomId={roomId}
+				setRoomId={setRoomId}
+				enterRoom={enterRoom}
+				enterRoomModal={enterRoomModal}
+				setEnterRoomModal={setEnterRoomModal}
 			/>
 		</Container>
 	);
