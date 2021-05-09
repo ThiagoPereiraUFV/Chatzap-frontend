@@ -2,7 +2,7 @@
 import { Toast } from "react-bootstrap";
 
 export const Push = {
-	Top: function Top({ toastShow, setToastShow, message, title }) {
+	Top: function Top({ pushShow, setPushShow, message, title }) {
 		return (
 			<div
 				aria-live="polite"
@@ -14,7 +14,7 @@ export const Push = {
 					zIndex: 5
 				}}
 			>
-				<Toast show={toastShow} onClose={() => setToastShow(false)} delay={3000} autohide>
+				<Toast show={pushShow} onClose={() => setPushShow(false)} delay={3000} autohide>
 					<Toast.Header>
 						<strong className="mr-auto">{title}</strong>
 					</Toast.Header>
@@ -24,7 +24,7 @@ export const Push = {
 		);
 	},
 
-	Bottom: function Bottom({ toastShow, setToastShow, message, title }) {
+	Bottom: function Bottom({ pushShow, setPushShow, message, title }) {
 		return (
 			<div
 				aria-live="polite"
@@ -36,7 +36,7 @@ export const Push = {
 					zIndex: 5
 				}}
 			>
-				<Toast show={toastShow} onClose={() => setToastShow(false)} delay={3000} autohide>
+				<Toast show={pushShow} onClose={() => setPushShow(false)} delay={3000} autohide>
 					<Toast.Header>
 						<strong className="mr-auto">{title}</strong>
 					</Toast.Header>

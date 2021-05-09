@@ -1,7 +1,8 @@
-//	Importing React and Router resouces
+//	Importing React and Router resources
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
+//	Importing framer motion resources
 import { AnimatePresence } from "framer-motion";
 
 //	Importing pages
@@ -14,38 +15,45 @@ import { NotFound } from "./pages/Website/NotFound";
 //	Importing components
 import { Loading } from "./components/Loading";
 
+//	Importing socket resources
+import io from "socket.io-client";
+
 //	Importing api to communicate to backend
 import api from "./services/api";
 
+//	Socket variable
+let socket = null;
+
 //	Exporting Routes
 export const Routes = () => {
-	//	User and session state variables
-	const [userId, setUserId] = useState(sessionStorage.getItem("userId")?.length ?
-		sessionStorage.getItem("userId")
+	//	User state variables
+	const [userToken, setUserToken] = useState(sessionStorage.getItem("userToken")?.length ?
+		sessionStorage.getItem("userToken")
 		:
-		localStorage.getItem("userId")
+		localStorage.getItem("userToken")
 	);
 	const [user, setUser] = useState(null);
 
 	//	Loading component state variable
 	const [isLoading, setLoading] = useState(true);
 
+	//	Get logged user data
 	useEffect(() => {
 		async function fetchData() {
-			if(userId && userId.length) {
+			if(userToken && userToken.length) {
 				await api.get("/session", {
 					headers: {
-						"X-Access-Token": userId
+						Authorization: `Bearer ${userToken}`
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
 						setUser(response.data);
 					}
 				}).catch(() => {
-					setUserId("");
+					setUserToken("");
 					setUser(null);
-					sessionStorage.removeItem("userId");
-					localStorage.removeItem("userId");
+					sessionStorage.removeItem("userToken");
+					localStorage.removeItem("userToken");
 				});
 			}
 
@@ -53,9 +61,30 @@ export const Routes = () => {
 		}
 
 		fetchData();
-	}, [userId]);
+	}, [userToken]);
 
-	const userAuth = user && user._id && userId && userId.length;
+	//	Socket connection
+	useEffect(() => {
+		if(user) {
+			socket = io.connect(process.env.REACT_APP_API_URL, {
+				"force new connection": true,
+				reconnectionAttempts: "Infinity",
+				timeout: 10000,
+				transports: ["websocket"]
+			});
+
+			socket.emit("online", user._id, (error) => {
+				if(error) {
+					alert(error);
+				}
+			});
+
+			return () => socket.disconnect();
+		}
+
+	}, [user]);
+
+	const userAuth = user && user._id && userToken && userToken.length;
 
 	if(isLoading) {
 		return (<Loading />);
@@ -65,30 +94,40 @@ export const Routes = () => {
 		<AnimatePresence exitBeforeEnter>
 			<BrowserRouter>
 				<Switch>
-					<Route exact path="/" component={Home} />
+					<Route exact path="/" component={() => <Home userToken={userToken} />} />
 					<Route
 						exact path="/chat"
-						component={() => userAuth ? <Chat user={user} /> : <Redirect to="/login?r=chat" />}
+						component={() => userAuth ?
+							<Chat
+								socket={socket}
+								user={user}
+								userToken={userToken}
+								setUserToken={setUserToken}
+								setUser={setUser}
+							/>
+							:
+							<Redirect to="/login?r=chat" />
+						}
 					/>
 					<Route
 						path="/login"
 						component={({ location }) => !userAuth ?
-							<Login setUser={setUser} setUserId={setUserId} location={location} />
+							<Login setUser={setUser} setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/" />
+							<Redirect to="/chat" />
 						}
 					/>
 					<Route
 						path="/signup"
 						component={({ location }) => !userAuth ?
-							<Signup setUser={setUser} setUserId={setUserId} location={location} />
+							<Signup setUser={setUser} setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/" />
+							<Redirect to="/chat" />
 						}
 					/>
-					<Route path="*" component={NotFound} status={404} />
+					<Route path="*" component={NotFound} />
 				</Switch>
 			</BrowserRouter>
 		</AnimatePresence>
 	);
-}
+};

@@ -15,14 +15,14 @@ import { Push } from "../../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
-export const Login = ({ setUser, setUserId, location }) => {
+export const Login = ({ setUser, setUserToken, location }) => {
 	//	User state variables
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
 
 	//	Message settings
-	const [toastShow, setToastShow] = useState(false);
+	const [pushShow, setPushShow] = useState(false);
 	const [title, setTitle] = useState("");
 	const [message, setMessage] = useState("");
 
@@ -43,25 +43,25 @@ export const Login = ({ setUser, setUserId, location }) => {
 			.then((response) => {
 				if(response && response.status === 201) {
 					if(rememberMe) {
-						localStorage.setItem("userId", response.data.token);
+						localStorage.setItem("userToken", response.data.token);
 					} else {
-						sessionStorage.setItem("userId", response.data.token);
+						sessionStorage.setItem("userToken", response.data.token);
 					}
 
-					setUserId(response.data.token);
+					setUserToken(response.data.token);
 					setUser(response.data.user);
 
-					history.push(`/${redirect ?? ""}`);
+					history.push(`/${redirect ?? "chat"}`);
 				}
 			}).catch((error) => {
 				setTitle("Erro!");
-				if(error.response && error.response.status === 400) {
+				if(error.response && [400, 404].includes(error.response.status)) {
 					const messages = error.response.data;
 					setMessage(messages.errors ? messages.errors.join(", ") : messages);
 				} else if(error.response && error.response.status === 500) {
 					setMessage(error.message);
 				}
-				setToastShow(true);
+				setPushShow(true);
 			});
 	}
 
@@ -73,7 +73,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1, x: 0 }}
 		>
-			<Push.Top toastShow={toastShow} setToastShow={setToastShow} message={message} title={title} />
+			<Push.Top pushShow={pushShow} setPushShow={setPushShow} message={message} title={title} />
 			<Col className="m-auto" sm="3">
 				<Form onSubmit={handleLogin}>
 					<Row>
@@ -84,6 +84,7 @@ export const Login = ({ setUser, setUserId, location }) => {
 								placeholder="ex. (31) 99999-9999"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
+								autoFocus
 								required
 							/>
 						</Form.Group>
@@ -102,12 +103,12 @@ export const Login = ({ setUser, setUserId, location }) => {
 								type="switch"
 								label="Lembrar de mim?"
 								checked={rememberMe}
-								onChange={e => setRememberMe(e.target.checked)}
+								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
 						</Form.Group>
 						<Col className="text-center my-2" sm="12">
 							<small>Não tem conta? </small>
-							<Link className="text-success" to="/signup">
+							<Link className="text-success" to={`/signup?r=${redirect ?? "chat"}`}>
 								<small>Clique aqui</small>
 							</Link>
 							<small> para se cadastrar</small>
@@ -126,4 +127,4 @@ export const Login = ({ setUser, setUserId, location }) => {
 			</Col>
 		</motion.div>
 	);
-}
+};

@@ -1,4 +1,4 @@
-//	Importing Routes feature to navigate through website pages
+//	Importing React and Routes feature to navigate through website pages
 import { Routes } from "./routes";
 
 //	Importing global styles
