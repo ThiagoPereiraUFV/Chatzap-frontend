@@ -5,7 +5,7 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { RiCloseFill, RiLogoutCircleLine } from "react-icons/ri";
 
 export const Infobar = {
-	Chat: ({ room, online }) => (
+	Chat: ({ room, online, setChat }) => (
 		<Navbar className="m-0" bg="success" variant="light" sticky="top">
 			<Nav className="mr-auto">
 				<Nav.Item>
@@ -22,7 +22,7 @@ export const Infobar = {
 				}
 			</Nav>
 			<Nav className="ml-auto">
-				<Nav.Item className="btn">
+				<Nav.Item className="btn" onClick={() => setChat(null)}>
 					<RiCloseFill className="text-white" size="25" />
 				</Nav.Item>
 			</Nav>

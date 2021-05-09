@@ -20,7 +20,7 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 	const [messages, setMessages] = useState([]);
 	const [query, setQuery] = useState("");
 	const [chats, setChats] = useState([]);
-	const [chat, setChat] = useState({});
+	const [chat, setChat] = useState(null);
 
 	//	Push notification state variables
 	const [pushShow, setPushShow] = useState(false);
@@ -130,7 +130,11 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 				title={titlePush}
 				message={messagePush}
 			/>
-			<Col className="bg-light m-0 p-0" style={{ overflowY: "scroll" }} sm="3">
+			<Col
+				className={chat ? "d-none" : "bg-light m-0 p-0"}
+				style={{ overflowY: "scroll" }}
+				sm="3"
+			>
 				<Infobar.Chats
 					actions={[{ func: setCreateRoomModal, name: "Criar sala" }]}
 					room={user?.nameDirect ?? "Messagem direta"}
@@ -140,11 +144,15 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 				<Query query={query} setQuery={setQuery} />
 				<Chats chats={chats} setChat={setChat} />
 			</Col>
-			<Col className="d-flex p-0 flex-column" sm="9">
-				<Infobar.Chat room={user?.nameDirect ?? "Messagem direta"} online={online} />
-				<Messages messages={messages} userPhone={user?.phone} />
-				<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-			</Col>
+			{chat ?
+				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
+					<Infobar.Chat room={chat?.roomId?.name} online={online} setChat={setChat} />
+					<Messages messages={messages} userPhone={user?.phone} />
+					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+				</Col>
+				:
+				null
+			}
 
 			<CreateRoomModal
 				roomName={roomName}
