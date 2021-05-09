@@ -41,7 +41,7 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChats(response.data);
+						setChats(response.data.filter((c) => c?.roomId));
 					}
 				}).catch(() => {
 					setChats([]);
