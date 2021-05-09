@@ -53,7 +53,7 @@ export const Infobar = {
 					<Nav.Item>
 						<NavDropdown className="p-0">
 							{actions?.map((action, index) => (
-								<NavDropdown.Item key={index} href={`#action/${index}`} onClick={() => action?.func(true)}>
+								<NavDropdown.Item key={index} onClick={() => action?.func(true)}>
 									{action?.name}
 								</NavDropdown.Item>
 							))}
