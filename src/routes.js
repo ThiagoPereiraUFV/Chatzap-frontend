@@ -50,7 +50,7 @@ export const Routes = () => {
 						setUser(response.data);
 					}
 				}).catch(() => {
-					setUserToken("");
+					setUserToken(null);
 					setUser(null);
 					sessionStorage.removeItem("userToken");
 					localStorage.removeItem("userToken");
@@ -65,15 +65,14 @@ export const Routes = () => {
 
 	//	Socket connection
 	useEffect(() => {
-		if(user) {
+		if(userToken) {
 			socket = io.connect(process.env.REACT_APP_API_URL, {
 				"force new connection": true,
-				reconnectionAttempts: "Infinity",
 				timeout: 10000,
 				transports: ["websocket"]
 			});
 
-			socket.emit("online", user._id, (error) => {
+			socket.emit("online", userToken, (error) => {
 				if(error) {
 					alert(error);
 				}
@@ -82,7 +81,7 @@ export const Routes = () => {
 			return () => socket.disconnect();
 		}
 
-	}, [user]);
+	}, [userToken]);
 
 	const userAuth = user && user._id && userToken && userToken.length;
 

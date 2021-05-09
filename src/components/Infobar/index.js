@@ -38,7 +38,7 @@ export const Infobar = {
 
 			sessionStorage.removeItem("userToken");
 			localStorage.removeItem("userToken");
-			setUserToken("");
+			setUserToken(null);
 			setUser(null);
 
 			history.push("/");
