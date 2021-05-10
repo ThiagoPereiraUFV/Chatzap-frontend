@@ -55,9 +55,6 @@ export const Routes = () => {
 					sessionStorage.removeItem("userToken");
 					localStorage.removeItem("userToken");
 				});
-			} else {
-				setUserToken(null);
-				setUser(null);
 			}
 
 			setLoading(false);
@@ -69,24 +66,22 @@ export const Routes = () => {
 	//	Socket connection
 	useEffect(() => {
 		if(user) {
-			socket = io.connect(process.env.REACT_APP_API_URL, {
-				"force new connection": true,
-				timeout: 10000,
+			socket = io(process.env.REACT_APP_API_URL, {
 				transports: ["websocket"]
 			});
-			console.log(user);
-			socket.emit("online", user?._id, (error) => {
+
+			socket?.emit("online", user?._id, (error) => {
 				if(error) {
 					alert(error);
 				}
 			});
 
-			return () => socket.disconnect();
+			return () => socket?.disconnect();
 		}
 
 	}, [user]);
 
-	const userAuth = user && user._id && userToken && userToken.length;
+	const userAuth = userToken && userToken.length;
 
 	if(isLoading) {
 		return (<Loading />);
