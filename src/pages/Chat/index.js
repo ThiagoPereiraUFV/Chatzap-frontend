@@ -95,12 +95,6 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		fetchData();
 	}, [chatId]);
 
-	useEffect(() => {
-		socket?.on("message", (receivedMsg) => {
-			setMessages((msgs) => [ ...msgs, receivedMsg ]);
-		});
-	}, []);
-
 	//	Get chat messages
 	useEffect(() => {
 		if(chat) {
@@ -109,7 +103,15 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 			socket?.on("messages", (roomMessages) => {
 				setMessages(roomMessages);
 			});
+
+			socket?.on("message", (receivedMsg) => {
+				if(receivedMsg?.roomId === chat?.roomId?._id) {
+					setMessages((msgs) => [ ...msgs, receivedMsg ]);
+				}
+			});
 		} else {
+			socket?.off("messages");
+			socket?.off("message");
 			setMessages([]);
 		}
 	}, [chat]);
