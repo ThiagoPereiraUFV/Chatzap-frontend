@@ -73,15 +73,13 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	}, [user]);
 
 	useEffect(() => {
-		socket?.emit("getMessages", chat?.roomId?._id, (error) => {
-			if(error) {
-				alert(error);
-			}
-		});
+		if(chat) {
+			socket?.emit("getMessages", chat?.roomId?._id);
 
-		socket?.on("messages", (roomMessages) => {
-			setMessages(roomMessages);
-		});
+			socket?.on("messages", (roomMessages) => {
+				setMessages(roomMessages);
+			});
+		}
 	}, [chat]);
 
 	async function createRoom(event) {

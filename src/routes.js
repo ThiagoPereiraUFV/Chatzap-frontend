@@ -21,11 +21,11 @@ import io from "socket.io-client";
 //	Importing api to communicate to backend
 import api from "./services/api";
 
-//	Socket variable
-let socket = null;
-
 //	Exporting Routes
 export const Routes = () => {
+	//	Socket variable
+	const [socket, setSocket] = useState(null);
+
 	//	User state variables
 	const [userToken, setUserToken] = useState(sessionStorage.getItem("userToken")?.length ?
 		sessionStorage.getItem("userToken")
@@ -66,9 +66,9 @@ export const Routes = () => {
 	//	Socket connection
 	useEffect(() => {
 		if(user) {
-			socket = io(process.env.REACT_APP_API_URL, {
+			setSocket(io(process.env.REACT_APP_API_URL, {
 				transports: ["websocket"]
-			});
+			}));
 
 			socket?.emit("online", user?._id, (error) => {
 				if(error) {
