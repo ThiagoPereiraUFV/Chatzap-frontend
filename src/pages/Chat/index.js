@@ -123,6 +123,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		}).then((response) => {
 			if(response && response.status === 201) {
 				setQuery(null);
+				socket?.emit("joinRoom", response.data?._id);
 			}
 		}).catch((error) => {
 			setTitlePush("Erro!");
@@ -150,6 +151,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		}).then((response) => {
 			if(response && response.status === 201) {
 				setQuery(null);
+				socket?.emit("joinRoom", response.data?.roomId);
 			}
 		}).catch((error) => {
 			setTitlePush("Erro!");
