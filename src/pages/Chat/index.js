@@ -67,19 +67,19 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	}, [userToken, query]);
 
 	useEffect(() => {
-		socket.on("message", (receivedMsg) => {
+		socket?.on("message", (receivedMsg) => {
 			setMessages((msgs) => [ ...msgs, receivedMsg ]);
 		});
 	}, [user]);
 
 	useEffect(() => {
-		socket.emit("getMessages", chat?.roomId?._id, (error) => {
+		socket?.emit("getMessages", chat?.roomId?._id, (error) => {
 			if(error) {
 				alert(error);
 			}
 		});
 
-		socket.on("messages", (roomMessages) => {
+		socket?.on("messages", (roomMessages) => {
 			setMessages(roomMessages);
 		});
 	}, [chat]);
@@ -142,7 +142,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		event.preventDefault();
 
 		if(message) {
-			socket.emit("sendMessage", {
+			socket?.emit("sendMessage", {
 				message,
 				userId: user?._id,
 				roomId: chat?.roomId?._id
