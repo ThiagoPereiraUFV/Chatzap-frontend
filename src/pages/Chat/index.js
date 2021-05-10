@@ -70,7 +70,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		}
 
 		fetchData();
-	}, [userToken, query]);
+	}, [query]);
 
 	//	Get user chat
 	useEffect(() => {
@@ -95,22 +95,19 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		fetchData();
 	}, [chatId]);
 
-	useEffect(() => {
-		if(chat) {
-			socket?.on("message", (receivedMsg) => {
-				if(receivedMsg?.roomId === chat?.roomId?._id) {
-					setMessages((msgs) => [ ...msgs, receivedMsg ]);
-				}
-			});
-		}
-	}, [chat]);
-
+	//	Get chat messages
 	useEffect(() => {
 		if(chat) {
 			socket?.emit("getMessages", chat?.roomId?._id);
 
 			socket?.on("messages", (roomMessages) => {
 				setMessages(roomMessages);
+			});
+
+			socket?.on("message", (receivedMsg) => {
+				if(receivedMsg?.roomId === chat?.roomId?._id) {
+					setMessages((msgs) => [ ...msgs, receivedMsg ]);
+				}
 			});
 		} else {
 			setMessages([]);
@@ -170,7 +167,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 			setPushShow(true);
 		});
 
-		setRoomName("");
+		setRoomId("");
 	}
 
 	function sendMessage(event) {
