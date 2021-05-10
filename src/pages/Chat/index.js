@@ -15,7 +15,7 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
+export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -176,7 +176,6 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 							}
 						]}
 					setUserToken={setUserToken}
-					setUser={setUser}
 				/>
 				<Query query={query} setQuery={setQuery} />
 				<Chats chats={chats} setChat={setChat} />

@@ -55,6 +55,9 @@ export const Routes = () => {
 					sessionStorage.removeItem("userToken");
 					localStorage.removeItem("userToken");
 				});
+			} else {
+				setUserToken(null);
+				setUser(null);
 			}
 
 			setLoading(false);
@@ -65,14 +68,14 @@ export const Routes = () => {
 
 	//	Socket connection
 	useEffect(() => {
-		if(userToken) {
+		if(user) {
 			socket = io.connect(process.env.REACT_APP_API_URL, {
 				"force new connection": true,
 				timeout: 10000,
 				transports: ["websocket"]
 			});
-
-			socket.emit("online", userToken, (error) => {
+			console.log(user);
+			socket.emit("online", user?._id, (error) => {
 				if(error) {
 					alert(error);
 				}
@@ -81,7 +84,7 @@ export const Routes = () => {
 			return () => socket.disconnect();
 		}
 
-	}, [userToken]);
+	}, [user]);
 
 	const userAuth = user && user._id && userToken && userToken.length;
 
@@ -102,7 +105,6 @@ export const Routes = () => {
 								user={user}
 								userToken={userToken}
 								setUserToken={setUserToken}
-								setUser={setUser}
 							/>
 							:
 							<Redirect to="/login?r=chat" />
@@ -111,7 +113,7 @@ export const Routes = () => {
 					<Route
 						path="/login"
 						component={({ location }) => !userAuth ?
-							<Login setUser={setUser} setUserToken={setUserToken} location={location} />
+							<Login setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chat" />
 						}
@@ -119,7 +121,7 @@ export const Routes = () => {
 					<Route
 						path="/signup"
 						component={({ location }) => !userAuth ?
-							<Signup setUser={setUser} setUserToken={setUserToken} location={location} />
+							<Signup setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chat" />
 						}

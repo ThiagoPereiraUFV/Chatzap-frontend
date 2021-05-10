@@ -19,7 +19,7 @@ export const Infobar = {
 			</Nav>
 		</Navbar>
 	),
-	Chats: ({ setUser, setUserToken, actions }) => {
+	Chats: ({ setUserToken, actions }) => {
 		//	Defining history to jump through pages
 		const history = useHistory();
 
@@ -30,7 +30,6 @@ export const Infobar = {
 			sessionStorage.removeItem("userToken");
 			localStorage.removeItem("userToken");
 			setUserToken(null);
-			setUser(null);
 
 			history.push("/");
 		}
