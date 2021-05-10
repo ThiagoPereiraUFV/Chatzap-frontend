@@ -108,6 +108,8 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 			socket?.on("messages", (roomMessages) => {
 				setMessages(roomMessages);
 			});
+		} else {
+			setMessages([]);
 		}
 	}, [chat]);
 
@@ -171,7 +173,6 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 		if(message) {
 			socket?.emit("sendMessage", {
 				message,
-				userId: user?._id,
 				roomId: chat?.roomId?._id
 			});
 			setMessage("");
