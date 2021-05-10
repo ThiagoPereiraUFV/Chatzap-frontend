@@ -66,15 +66,13 @@ export const Routes = () => {
 	//	Socket connection
 	useEffect(() => {
 		if(user) {
-			setSocket(io(process.env.REACT_APP_API_URL, {
+			const wsConn = io(process.env.REACT_APP_API_URL, {
 				transports: ["websocket"]
-			}));
-
-			socket?.emit("online", user?._id, (error) => {
-				if(error) {
-					alert(error);
-				}
 			});
+
+			wsConn?.emit("online", user?._id);
+
+			setSocket(wsConn);
 
 			return () => socket?.disconnect();
 		}
