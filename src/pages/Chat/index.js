@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 
 import { Col, Container } from "react-bootstrap";
 
+//	Importing query-string handle feature
+import queryString from "query-string";
+
 import { Infobar } from "../../components/Infobar";
 import { Chats } from "../../components/Chats";
 import { Input } from "../../components/Input";
@@ -32,6 +35,9 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	const [roomId, setRoomId] = useState("");
 	const [createRoomModal, setCreateRoomModal] = useState(false);
 	const [enterRoomModal, setEnterRoomModal] = useState(false);
+
+	//	Chat id variable
+	const chatId = queryString.parse(location?.search)?.c;
 
 	//	Get user chats
 	useEffect(() => {
@@ -65,6 +71,29 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 
 		fetchData();
 	}, [userToken, query]);
+
+	//	Get user chat
+	useEffect(() => {
+		async function fetchData() {
+			if(chatId && chatId.length) {
+				await api.get(`/userRoom/${chatId}`, {
+					headers: {
+						Authorization: `Bearer ${userToken}`
+					}
+				}).then((response) => {
+					if(response && response.status === 200) {
+						setChat(response.data);
+					}
+				}).catch(() => {
+					setChat(null);
+				});
+			} else {
+				setChat(null);
+			}
+		}
+
+		fetchData();
+	}, [chatId]);
 
 	useEffect(() => {
 		socket?.on("message", (receivedMsg) => {
@@ -180,7 +209,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId?.name} setChat={setChat} />
+					<Infobar.Chat room={chat?.roomId?.name} />
 					<Messages messages={messages} userPhone={user?.phone} />
 					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
