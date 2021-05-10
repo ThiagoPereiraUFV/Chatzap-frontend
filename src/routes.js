@@ -21,11 +21,11 @@ import io from "socket.io-client";
 //	Importing api to communicate to backend
 import api from "./services/api";
 
-//	Socket variable
-let socket = null;
-
 //	Exporting Routes
 export const Routes = () => {
+	//	Socket variable
+	const [socket, setSocket] = useState(null);
+
 	//	User state variables
 	const [userToken, setUserToken] = useState(sessionStorage.getItem("userToken")?.length ?
 		sessionStorage.getItem("userToken")
@@ -65,25 +65,23 @@ export const Routes = () => {
 
 	//	Socket connection
 	useEffect(() => {
-		if(userToken) {
-			socket = io.connect(process.env.REACT_APP_API_URL, {
-				"force new connection": true,
-				timeout: 10000,
+		if(user) {
+			setSocket(io(process.env.REACT_APP_API_URL, {
 				transports: ["websocket"]
-			});
+			}));
 
-			socket.emit("online", userToken, (error) => {
+			socket?.emit("online", user?._id, (error) => {
 				if(error) {
 					alert(error);
 				}
 			});
 
-			return () => socket.disconnect();
+			return () => socket?.disconnect();
 		}
 
-	}, [userToken]);
+	}, [user]);
 
-	const userAuth = user && user._id && userToken && userToken.length;
+	const userAuth = userToken && userToken.length;
 
 	if(isLoading) {
 		return (<Loading />);
@@ -102,7 +100,6 @@ export const Routes = () => {
 								user={user}
 								userToken={userToken}
 								setUserToken={setUserToken}
-								setUser={setUser}
 							/>
 							:
 							<Redirect to="/login?r=chat" />
@@ -111,7 +108,7 @@ export const Routes = () => {
 					<Route
 						path="/login"
 						component={({ location }) => !userAuth ?
-							<Login setUser={setUser} setUserToken={setUserToken} location={location} />
+							<Login setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chat" />
 						}
@@ -119,7 +116,7 @@ export const Routes = () => {
 					<Route
 						path="/signup"
 						component={({ location }) => !userAuth ?
-							<Signup setUser={setUser} setUserToken={setUserToken} location={location} />
+							<Signup setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chat" />
 						}

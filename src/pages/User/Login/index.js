@@ -15,7 +15,7 @@ import { Push } from "../../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
-export const Login = ({ setUser, setUserToken, location }) => {
+export const Login = ({ setUserToken, location }) => {
 	//	User state variables
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
@@ -49,7 +49,6 @@ export const Login = ({ setUser, setUserToken, location }) => {
 					}
 
 					setUserToken(response.data.token);
-					setUser(response.data.user);
 
 					history.push(`/${redirect ?? "chat"}`);
 				}

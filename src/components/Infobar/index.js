@@ -5,21 +5,25 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { RiCloseFill, RiLogoutCircleLine } from "react-icons/ri";
 
 export const Infobar = {
-	Chat: ({ room, setChat }) => (
-		<Navbar className="m-0" bg="success" variant="light" sticky="top">
-			<Nav className="mr-auto">
-				<Nav.Item>
-					<Navbar.Brand className="text-light font-weight-bold">{room}</Navbar.Brand>
-				</Nav.Item>
-			</Nav>
-			<Nav className="ml-auto">
-				<Nav.Item className="btn" onClick={() => setChat(null)}>
-					<RiCloseFill className="text-white" size="25" />
-				</Nav.Item>
-			</Nav>
-		</Navbar>
-	),
-	Chats: ({ setUser, setUserToken, actions }) => {
+	Chat: ({ room }) => {
+		const history = useHistory();
+
+		return (
+			<Navbar className="m-0" bg="success" variant="light" sticky="top">
+				<Nav className="mr-auto">
+					<Nav.Item>
+						<Navbar.Brand className="text-light font-weight-bold">{room}</Navbar.Brand>
+					</Nav.Item>
+				</Nav>
+				<Nav className="ml-auto">
+					<Nav.Item className="btn" onClick={() => history.push("/chat")}>
+						<RiCloseFill className="text-white" size="25" />
+					</Nav.Item>
+				</Nav>
+			</Navbar>
+		);
+	},
+	Chats: ({ setUserToken, actions }) => {
 		//	Defining history to jump through pages
 		const history = useHistory();
 
@@ -30,7 +34,6 @@ export const Infobar = {
 			sessionStorage.removeItem("userToken");
 			localStorage.removeItem("userToken");
 			setUserToken(null);
-			setUser(null);
 
 			history.push("/");
 		}

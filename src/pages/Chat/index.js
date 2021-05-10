@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 
 import { Col, Container } from "react-bootstrap";
 
+//	Importing query-string handle feature
+import queryString from "query-string";
+
 import { Infobar } from "../../components/Infobar";
 import { Chats } from "../../components/Chats";
 import { Input } from "../../components/Input";
@@ -15,7 +18,7 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
+export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -32,6 +35,9 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 	const [roomId, setRoomId] = useState("");
 	const [createRoomModal, setCreateRoomModal] = useState(false);
 	const [enterRoomModal, setEnterRoomModal] = useState(false);
+
+	//	Chat id variable
+	const chatId = queryString.parse(location?.search)?.c;
 
 	//	Get user chats
 	useEffect(() => {
@@ -66,22 +72,43 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 		fetchData();
 	}, [userToken, query]);
 
+	//	Get user chat
 	useEffect(() => {
-		socket.on("message", (receivedMsg) => {
+		async function fetchData() {
+			if(chatId && chatId.length) {
+				await api.get(`/userRoom/${chatId}`, {
+					headers: {
+						Authorization: `Bearer ${userToken}`
+					}
+				}).then((response) => {
+					if(response && response.status === 200) {
+						setChat(response.data);
+					}
+				}).catch(() => {
+					setChat(null);
+				});
+			} else {
+				setChat(null);
+			}
+		}
+
+		fetchData();
+	}, [chatId]);
+
+	useEffect(() => {
+		socket?.on("message", (receivedMsg) => {
 			setMessages((msgs) => [ ...msgs, receivedMsg ]);
 		});
 	}, [user]);
 
 	useEffect(() => {
-		socket.emit("getMessages", chat?.roomId?._id, (error) => {
-			if(error) {
-				alert(error);
-			}
-		});
+		if(chat) {
+			socket?.emit("getMessages", chat?.roomId?._id);
 
-		socket.on("messages", (roomMessages) => {
-			setMessages(roomMessages);
-		});
+			socket?.on("messages", (roomMessages) => {
+				setMessages(roomMessages);
+			});
+		}
 	}, [chat]);
 
 	async function createRoom(event) {
@@ -142,7 +169,7 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 		event.preventDefault();
 
 		if(message) {
-			socket.emit("sendMessage", {
+			socket?.emit("sendMessage", {
 				message,
 				userId: user?._id,
 				roomId: chat?.roomId?._id
@@ -176,14 +203,13 @@ export const Chat = ({ socket, user, userToken, setUser, setUserToken }) => {
 							}
 						]}
 					setUserToken={setUserToken}
-					setUser={setUser}
 				/>
 				<Query query={query} setQuery={setQuery} />
 				<Chats chats={chats} setChat={setChat} />
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId?.name} setChat={setChat} />
+					<Infobar.Chat room={chat?.roomId?.name} />
 					<Messages messages={messages} userPhone={user?.phone} />
 					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
