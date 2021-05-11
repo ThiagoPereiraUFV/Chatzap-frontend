@@ -16,6 +16,7 @@ export const CreateRoomModal = ({ roomName, setRoomName, createRoom, createRoomM
 						type="text"
 						value={roomName}
 						onChange={(e) => setRoomName(e.target.value)}
+						autoComplete="off"
 						required
 					/>
 				</Form.Group>
