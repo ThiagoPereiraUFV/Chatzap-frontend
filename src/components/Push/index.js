@@ -1,48 +1,32 @@
 //	Importing React Bootstrap features
-import { Toast } from "react-bootstrap";
+import { useEffect } from "react";
+import { Alert } from "react-bootstrap";
 
-export const Push = {
-	Top: function Top({ pushShow, setPushShow, message, title }) {
-		return (
-			<div
-				aria-live="polite"
-				aria-atomic="true"
-				style={{
-					position: "fixed",
-					top: "7%",
-					right: "2%",
-					zIndex: 5
-				}}
-			>
-				<Toast show={pushShow} onClose={() => setPushShow(false)} delay={3000} autohide>
-					<Toast.Header>
-						<strong className="mr-auto">{title}</strong>
-					</Toast.Header>
-					<Toast.Body>{message}</Toast.Body>
-				</Toast>
-			</div>
-		);
-	},
+export function Push({ pushShow, setPushShow, message, color }) {
+	useEffect(() => {
+		if(pushShow) {
+			setTimeout(() => {
+				setPushShow(false);
+			}, 3000);
+		}
+	}, [pushShow]);
 
-	Bottom: function Bottom({ pushShow, setPushShow, message, title }) {
-		return (
-			<div
-				aria-live="polite"
-				aria-atomic="true"
-				style={{
-					position: "fixed",
-					right: "2%",
-					bottom: "3%",
-					zIndex: 5
-				}}
+	return (
+		<div
+			style={{
+				position: "fixed",
+				bottom: "3%",
+				left: "50%",
+				transform: "translate(-50%, 0)",
+				zIndex: 5
+			}}
+		>
+			<Alert
+				show={pushShow}
+				variant={color?.length ? color : "danger"}
 			>
-				<Toast show={pushShow} onClose={() => setPushShow(false)} delay={3000} autohide>
-					<Toast.Header>
-						<strong className="mr-auto">{title}</strong>
-					</Toast.Header>
-					<Toast.Body>{message}</Toast.Body>
-				</Toast>
-			</div>
-		);
-	}
-};
+				{message}
+			</Alert>
+		</div>
+	);
+}

@@ -23,8 +23,8 @@ export const Login = ({ setUserToken, location }) => {
 
 	//	Message settings
 	const [pushShow, setPushShow] = useState(false);
-	const [title, setTitle] = useState("");
 	const [message, setMessage] = useState("");
+	const [validated, setValidated] = useState(false);
 
 	//	Redirect
 	const redirect = queryString.parse(location?.search)?.r;
@@ -53,7 +53,6 @@ export const Login = ({ setUserToken, location }) => {
 					history.push(`/${redirect ?? "chat"}`);
 				}
 			}).catch((error) => {
-				setTitle("Erro!");
 				if(error.response && [400, 404].includes(error.response.status)) {
 					const messages = error.response.data;
 					setMessage(messages.errors ? messages.errors.join(", ") : messages);
@@ -61,6 +60,7 @@ export const Login = ({ setUserToken, location }) => {
 					setMessage(error.message);
 				}
 				setPushShow(true);
+				setValidated(true);
 			});
 	}
 
@@ -72,9 +72,9 @@ export const Login = ({ setUserToken, location }) => {
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1, x: 0 }}
 		>
-			<Push.Top pushShow={pushShow} setPushShow={setPushShow} message={message} title={title} />
+			<Push pushShow={pushShow} setPushShow={setPushShow} message={message} />
 			<Col className="m-auto" sm="3">
-				<Form onSubmit={handleLogin}>
+				<Form noValidate validated={validated} onSubmit={handleLogin}>
 					<Row>
 						<Form.Group as={Col} controlId="phone" sm="12">
 							<Form.Label>Seu número</Form.Label>
@@ -86,6 +86,9 @@ export const Login = ({ setUserToken, location }) => {
 								autoFocus
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Digite um número de telefone válido
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="password" sm="12">
 							<Form.Label>Sua senha</Form.Label>
@@ -96,6 +99,9 @@ export const Login = ({ setUserToken, location }) => {
 								onChange={(e) => setPassword(e.target.value)}
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Digite uma senha
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="rememberMe" sm="12">
 							<Form.Check
