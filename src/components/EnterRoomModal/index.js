@@ -16,6 +16,7 @@ export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, s
 						type="text"
 						value={roomId}
 						onChange={(e) => setRoomId(e.target.value)}
+						autoComplete="off"
 						required
 					/>
 				</Form.Group>

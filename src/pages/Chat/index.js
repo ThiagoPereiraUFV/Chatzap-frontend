@@ -42,8 +42,8 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	//	Get user chats
 	useEffect(() => {
 		async function fetchData() {
-			if(query && query.length) {
-				await api.get(`/searchRoom?q=${query}`, {
+			if(query && query.trim()?.length) {
+				await api.get(`/searchRoom?q=${query.trim()}`, {
 					headers: {
 						Authorization: `Bearer ${userToken}`
 					}
