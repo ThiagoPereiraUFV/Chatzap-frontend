@@ -7,7 +7,7 @@ import { Col, Container } from "react-bootstrap";
 import queryString from "query-string";
 
 import { Infobar } from "../../components/Infobar";
-import { Chats } from "../../components/Chats";
+import { ChatList } from "../../components/ChatList";
 import { Input } from "../../components/Input";
 import { Query } from "../../components/Query";
 import { Messages } from "../../components/Messages";
@@ -18,11 +18,11 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ socket, user, userToken, setUserToken }) => {
+export const Chats = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [chats, setChats] = useState([]);
+	const [chatList, setChatList] = useState([]);
 	const [chat, setChat] = useState(null);
 
 	//	Push notification state variables
@@ -38,7 +38,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	//	Chat id variable
 	const chatId = queryString.parse(location?.search)?.c;
 
-	//	Get user chats
+	//	Get user chatList
 	useEffect(() => {
 		async function fetchData() {
 			if(query && query.trim()?.length) {
@@ -48,10 +48,10 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChats(response.data.filter((c) => c?.roomId));
+						setChatList(response.data.filter((c) => c?.roomId));
 					}
 				}).catch(() => {
-					setChats([]);
+					setChatList([]);
 				});
 			} else {
 				await api.get("/userRoom", {
@@ -60,10 +60,10 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChats(response.data);
+						setChatList(response.data);
 					}
 				}).catch(() => {
-					setChats([]);
+					setChatList([]);
 				});
 			}
 		}
@@ -204,7 +204,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 					setUserToken={setUserToken}
 				/>
 				<Query query={query} setQuery={setQuery} />
-				<Chats chats={chats} setChat={setChat} />
+				<ChatList chats={chatList} setChat={setChat} />
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>

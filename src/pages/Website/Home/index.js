@@ -27,7 +27,7 @@ export const Home = ({ userToken }) => (
 					<p>Converse agora</p>
 					<p className="lead">
 						<Link
-							to="/chat"
+							to="/chats"
 							className="btn btn-outline-light btn-lg px-3 py-1"
 						>
 							Minhas conversas

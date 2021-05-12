@@ -18,7 +18,7 @@ export const Infobar = {
 									className="rounded-0"
 									variant="success"
 									size="lg"
-									onClick={() => history.push("/chat")}
+									onClick={() => history.push("/chats")}
 								>
 									<RiArrowLeftLine className="text-white" size="25" />
 								</Button>
