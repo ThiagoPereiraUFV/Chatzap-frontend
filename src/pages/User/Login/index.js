@@ -50,7 +50,7 @@ export const Login = ({ setUserToken, location }) => {
 
 					setUserToken(response.data.token);
 
-					history.push(`/${redirect ?? "chat"}`);
+					history.push(`/${redirect ?? "chats"}`);
 				}
 			}).catch((error) => {
 				if(error.response && [400, 404].includes(error.response.status)) {

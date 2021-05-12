@@ -56,7 +56,7 @@ export const Signup = ({ setUserToken, location }) => {
 
 					setUserToken(response.data.token);
 
-					history.push(`/${redirect ?? "chat"}`);
+					history.push(`/${redirect ?? "chats"}`);
 				}
 			}).catch((error) => {
 				if(error.response && error.response.status === 400) {

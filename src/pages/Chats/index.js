@@ -6,11 +6,8 @@ import { Col, Container } from "react-bootstrap";
 //	Importing query-string handle feature
 import queryString from "query-string";
 
-import { Infobar } from "../../components/Infobar";
-import { Chats } from "../../components/Chats";
-import { Input } from "../../components/Input";
-import { Query } from "../../components/Query";
-import { Messages } from "../../components/Messages";
+import { Chat } from "../../components/Chat";
+import { ChatList } from "../../components/ChatList";
 import { CreateRoomModal } from "../../components/CreateRoomModal";
 import { EnterRoomModal } from "../../components/EnterRoomModal";
 import { Push } from "../../components/Push";
@@ -18,11 +15,11 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
-export const Chat = ({ socket, user, userToken, setUserToken }) => {
+export const Chats = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [chats, setChats] = useState([]);
+	const [chatList, setChatList] = useState([]);
 	const [chat, setChat] = useState(null);
 
 	//	Push notification state variables
@@ -38,7 +35,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 	//	Chat id variable
 	const chatId = queryString.parse(location?.search)?.c;
 
-	//	Get user chats
+	//	Get user chatList
 	useEffect(() => {
 		async function fetchData() {
 			if(query && query.trim()?.length) {
@@ -48,10 +45,10 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChats(response.data.filter((c) => c?.roomId));
+						setChatList(response.data.filter((c) => c?.roomId));
 					}
 				}).catch(() => {
-					setChats([]);
+					setChatList([]);
 				});
 			} else {
 				await api.get("/userRoom", {
@@ -60,10 +57,10 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChats(response.data);
+						setChatList(response.data);
 					}
 				}).catch(() => {
-					setChats([]);
+					setChatList([]);
 				});
 			}
 		}
@@ -185,35 +182,33 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 				setPushShow={setPushShow}
 				message={messagePush}
 			/>
-			<Col
-				className={chat ? "d-none" : "bg-light m-0 p-0"}
-				style={{ overflowY: "scroll" }}
-				sm="3"
-			>
-				<Infobar.Chats
-					actions={
-						[
-							{
-								func: setCreateRoomModal,
-								name: "Criar sala"
-							}, {
-								func: setEnterRoomModal,
-								name: "Entrar em uma sala"
-							}
-						]}
-					setUserToken={setUserToken}
-				/>
-				<Query query={query} setQuery={setQuery} />
-				<Chats chats={chats} setChat={setChat} />
-			</Col>
-			{chat ?
-				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId} />
-					<Messages messages={messages} userPhone={user?.phone} />
-					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+			{!chat ?
+				<Col
+					className="bg-light m-0 p-0"
+					sm="3"
+				>
+					<ChatList.Infobar
+						actions={
+							[
+								{
+									func: setCreateRoomModal,
+									name: "Criar sala"
+								}, {
+									func: setEnterRoomModal,
+									name: "Entrar em uma sala"
+								}
+							]}
+						setUserToken={setUserToken}
+					/>
+					<ChatList.Query query={query} setQuery={setQuery} />
+					<ChatList.Chats chats={chatList} setChat={setChat} />
 				</Col>
 				:
-				null
+				<Col className="d-flex p-0 flex-column">
+					<Chat.Infobar room={chat?.roomId} />
+					<Chat.Messages messages={messages} userPhone={user?.phone} />
+					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+				</Col>
 			}
 
 			<CreateRoomModal

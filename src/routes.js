@@ -6,7 +6,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 //	Importing pages
-import { Chat } from "./pages/Chat";
+import { Chats } from "./pages/Chats";
 import { Login } from "./pages/User/Login";
 import { Signup } from "./pages/User/Signup";
 import { Home } from "./pages/Website/Home";
@@ -91,16 +91,16 @@ export const Routes = () => {
 				<Switch>
 					<Route exact path="/" component={() => <Home userToken={userToken} />} />
 					<Route
-						exact path="/chat"
+						exact path="/chats"
 						component={() => userAuth ?
-							<Chat
+							<Chats
 								socket={socket}
 								user={user}
 								userToken={userToken}
 								setUserToken={setUserToken}
 							/>
 							:
-							<Redirect to="/login?r=chat" />
+							<Redirect to="/login?r=chats" />
 						}
 					/>
 					<Route
@@ -108,7 +108,7 @@ export const Routes = () => {
 						component={({ location }) => !userAuth ?
 							<Login setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/chat" />
+							<Redirect to="/chats" />
 						}
 					/>
 					<Route
@@ -116,7 +116,7 @@ export const Routes = () => {
 						component={({ location }) => !userAuth ?
 							<Signup setUserToken={setUserToken} location={location} />
 							:
-							<Redirect to="/chat" />
+							<Redirect to="/chats" />
 						}
 					/>
 					<Route path="*" component={NotFound} />
