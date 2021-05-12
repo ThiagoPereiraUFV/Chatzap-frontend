@@ -73,7 +73,7 @@ export const Chat = {
 		}, [messages]);
 
 		return (
-			<Row ref={ref} className="py-4 mx-0 mb-auto w-100" style={{ overflowY: "auto" }}>
+			<Row ref={ref} className="py-2 mx-0 mb-auto w-100" style={{ overflowY: "auto" }}>
 				{messages.map((message, i) => (
 					<Col key={i} className="m-0 p-0" sm="12">
 						{message?.userId?.phone === userPhone ?
@@ -81,7 +81,8 @@ export const Chat = {
 								<div className="messageBox backgroundBlue text-dark">
 									<p className="messageText colorWhite m-auto py-2">
 										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}</Linkify>
+											{emojify(message?.text)}
+										</Linkify>
 									</p>
 								</div>
 							</div>
@@ -90,7 +91,8 @@ export const Chat = {
 								<div className="messageBox backgroundLight text-dark">
 									<p className="messageText colorDark m-auto py-2">
 										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}</Linkify>
+											{emojify(message?.text)}
+										</Linkify>
 									</p>
 								</div>
 								<p className="sentText m-2 my-auto">

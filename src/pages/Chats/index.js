@@ -204,7 +204,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				<ChatList.Chats chats={chatList} setChat={setChat} />
 			</Col>
 			{chat ?
-				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
+				<Col className="d-flex p-0 flex-column">
 					<Chat.Infobar room={chat?.roomId} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
