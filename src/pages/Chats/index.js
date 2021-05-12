@@ -6,11 +6,8 @@ import { Col, Container } from "react-bootstrap";
 //	Importing query-string handle feature
 import queryString from "query-string";
 
-import { Infobar } from "../../components/Infobar";
+import { Chat } from "../../components/Chat";
 import { ChatList } from "../../components/ChatList";
-import { Input } from "../../components/Input";
-import { Query } from "../../components/Query";
-import { Messages } from "../../components/Messages";
 import { CreateRoomModal } from "../../components/CreateRoomModal";
 import { EnterRoomModal } from "../../components/EnterRoomModal";
 import { Push } from "../../components/Push";
@@ -190,7 +187,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				style={{ overflowY: "scroll" }}
 				sm="3"
 			>
-				<Infobar.Chats
+				<ChatList.Infobar
 					actions={
 						[
 							{
@@ -203,14 +200,14 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 						]}
 					setUserToken={setUserToken}
 				/>
-				<Query query={query} setQuery={setQuery} />
-				<ChatList chats={chatList} setChat={setChat} />
+				<ChatList.Query query={query} setQuery={setQuery} />
+				<ChatList.Chats chats={chatList} setChat={setChat} />
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId} />
-					<Messages messages={messages} userPhone={user?.phone} />
-					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+					<Chat.Infobar room={chat?.roomId} />
+					<Chat.Messages messages={messages} userPhone={user?.phone} />
+					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
 				:
 				null
