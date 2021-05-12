@@ -182,35 +182,33 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				setPushShow={setPushShow}
 				message={messagePush}
 			/>
-			<Col
-				className={chat ? "d-none" : "bg-light m-0 p-0"}
-				style={{ overflowY: "scroll" }}
-				sm="3"
-			>
-				<ChatList.Infobar
-					actions={
-						[
-							{
-								func: setCreateRoomModal,
-								name: "Criar sala"
-							}, {
-								func: setEnterRoomModal,
-								name: "Entrar em uma sala"
-							}
-						]}
-					setUserToken={setUserToken}
-				/>
-				<ChatList.Query query={query} setQuery={setQuery} />
-				<ChatList.Chats chats={chatList} setChat={setChat} />
-			</Col>
-			{chat ?
+			{!chat ?
+				<Col
+					className="bg-light m-0 p-0"
+					sm="3"
+				>
+					<ChatList.Infobar
+						actions={
+							[
+								{
+									func: setCreateRoomModal,
+									name: "Criar sala"
+								}, {
+									func: setEnterRoomModal,
+									name: "Entrar em uma sala"
+								}
+							]}
+						setUserToken={setUserToken}
+					/>
+					<ChatList.Query query={query} setQuery={setQuery} />
+					<ChatList.Chats chats={chatList} setChat={setChat} />
+				</Col>
+				:
 				<Col className="d-flex p-0 flex-column">
 					<Chat.Infobar room={chat?.roomId} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
-				:
-				null
 			}
 
 			<CreateRoomModal

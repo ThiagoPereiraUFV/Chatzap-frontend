@@ -68,7 +68,9 @@ export const ChatList = {
 		const history = useHistory();
 
 		return (
-			<Row className="m-auto" >
+			<Row
+				className="m-auto"
+			>
 				{chats.map((chat, i) => (
 					<Card
 						key={i}
