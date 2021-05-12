@@ -27,7 +27,6 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 
 	//	Push notification state variables
 	const [pushShow, setPushShow] = useState(false);
-	const [titlePush, setTitlePush] = useState("");
 	const [messagePush, setMessagePush] = useState("");
 
 	//	Room state variables
@@ -129,7 +128,6 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 				socket?.emit("joinRoom", response.data?._id);
 			}
 		}).catch((error) => {
-			setTitlePush("Erro!");
 			if(error.response && [401, 403].includes(error.response.status)) {
 				setMessagePush(error.response.data);
 			} else if(error.response && [400].includes(error.response.status)) {
@@ -157,7 +155,6 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 				socket?.emit("joinRoom", response.data?.roomId);
 			}
 		}).catch((error) => {
-			setTitlePush("Erro!");
 			if(error.response && [401, 403, 404].includes(error.response.status)) {
 				setMessagePush(error.response.data);
 			} else if(error.response && [400].includes(error.response.status)) {
@@ -183,10 +180,9 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 
 	return (
 		<Container className="d-flex p-0 h-100 flex-row" fluid>
-			<Push.Top
+			<Push
 				pushShow={pushShow}
 				setPushShow={setPushShow}
-				title={titlePush}
 				message={messagePush}
 			/>
 			<Col
@@ -212,7 +208,7 @@ export const Chat = ({ socket, user, userToken, setUserToken }) => {
 			</Col>
 			{chat ?
 				<Col className="d-flex p-0 flex-column" sm={chat ? "12" : "9"}>
-					<Infobar.Chat room={chat?.roomId?.name} />
+					<Infobar.Chat room={chat?.roomId} />
 					<Messages messages={messages} userPhone={user?.phone} />
 					<Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>

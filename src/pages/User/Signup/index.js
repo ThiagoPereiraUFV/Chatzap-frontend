@@ -26,8 +26,8 @@ export const Signup = ({ setUserToken, location }) => {
 
 	//	Message settings
 	const [pushShow, setPushShow] = useState(false);
-	const [title, setTitle] = useState("");
 	const [message, setMessage] = useState("");
+	const [validated, setValidated] = useState(false);
 
 	//	Redirect
 	const redirect = queryString.parse(location?.search)?.r;
@@ -59,13 +59,13 @@ export const Signup = ({ setUserToken, location }) => {
 					history.push(`/${redirect ?? "chat"}`);
 				}
 			}).catch((error) => {
-				setTitle("Erro!");
 				if(error.response && error.response.status === 400) {
 					const messages = error.response.data;
 					setMessage(messages.errors ? messages.errors.join(", ") : messages);
 				} else if(error.response && error.response.status === 500) {
 					setMessage(error.message);
 				}
+				setValidated(true);
 				setPushShow(true);
 			});
 	}
@@ -78,9 +78,9 @@ export const Signup = ({ setUserToken, location }) => {
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1, x: 0 }}
 		>
-			<Push.Top pushShow={pushShow} setPushShow={setPushShow} message={message} title={title} />
+			<Push pushShow={pushShow} setPushShow={setPushShow} message={message} />
 			<Col className="m-auto" lg="8" md="6">
-				<Form onSubmit={handleSignup}>
+				<Form noValidate validated={validated} onSubmit={handleSignup}>
 					<Row>
 						<Form.Group as={Col} controlId="name" sm="6">
 							<Form.Label>Seu nome</Form.Label>
@@ -92,6 +92,9 @@ export const Signup = ({ setUserToken, location }) => {
 								autoFocus
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Digite seu nome
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="phone" sm="6">
 							<Form.Label>Seu número</Form.Label>
@@ -102,6 +105,9 @@ export const Signup = ({ setUserToken, location }) => {
 								onChange={(e) => setPhone(e.target.value)}
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Digite um número de telefone válido
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="email" sm="6">
 							<Form.Label>Seu email</Form.Label>
@@ -122,6 +128,9 @@ export const Signup = ({ setUserToken, location }) => {
 								onChange={(e) => setPassword(e.target.value)}
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Digite uma senha
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="passwordC" sm="6">
 							<Form.Label>Confirme sua senha</Form.Label>
@@ -132,6 +141,9 @@ export const Signup = ({ setUserToken, location }) => {
 								onChange={(e) => setPasswordC(e.target.value)}
 								required
 							/>
+							<Form.Control.Feedback type="invalid">
+              	Confirme sua senha
+							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="rememberMe" sm="6">
 							<Form.Label>Lembrar de mim?</Form.Label>
