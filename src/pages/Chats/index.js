@@ -21,6 +21,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 	const [messages, setMessages] = useState([]);
 	const [chatList, setChatList] = useState([]);
 	const [chat, setChat] = useState(null);
+	const [chatMembers, setChatMembers] = useState([]);
 
 	//	Push notification state variables
 	const [pushShow, setPushShow] = useState(false);
@@ -93,7 +94,22 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 
 	//	Get chat messages
 	useEffect(() => {
+		async function fetchData() {
+			await api.get(`/allRoomUsers/${chat?.roomId?._id}`, {
+				headers: {
+					Authorization: `Bearer ${userToken}`
+				}
+			}).then((response) => {
+				if(response && response.status === 200) {
+					setChatMembers(response.data);
+				}
+			}).catch(() => {
+				setChat(null);
+			});
+		}
+
 		if(chat) {
+			fetchData();
 			socket?.emit("getMessages", chat?.roomId?._id);
 
 			socket?.on("messages", (roomMessages) => {
@@ -109,6 +125,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 			socket?.off("messages");
 			socket?.off("message");
 			setMessages([]);
+			setChatMembers([]);
 		}
 	}, [chat]);
 
