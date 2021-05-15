@@ -101,7 +101,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				}
 			}).then((response) => {
 				if(response && response.status === 200) {
-					setChatMembers(response.data);
+					setChatMembers(response.data?.map((m) => m?.userId));
 				}
 			}).catch(() => {
 				setChat(null);
@@ -222,7 +222,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				</Col>
 				:
 				<Col className="d-flex p-0 flex-column">
-					<Chat.Infobar room={chat?.roomId} />
+					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>

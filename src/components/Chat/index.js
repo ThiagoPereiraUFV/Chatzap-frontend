@@ -1,7 +1,7 @@
 import { useEffect, createRef } from "react";
 import { useHistory } from "react-router-dom";
 
-import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form } from "react-bootstrap";
+import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge } from "react-bootstrap";
 import { RiSendPlaneFill, RiArrowLeftLine } from "react-icons/ri";
 import { emojify } from "react-emoji";
 import Linkify from "react-linkify";
@@ -9,7 +9,7 @@ import Linkify from "react-linkify";
 import "./style.css";
 
 export const Chat = {
-	Infobar: ({ room }) => {
+	Infobar: ({ room, chatMembers }) => {
 		const history = useHistory();
 
 		return (
@@ -55,6 +55,13 @@ export const Chat = {
 												<Col className="text-light m-2">
 													{`Membros ${room?.nMembers}`}
 												</Col>
+											</Row>
+											<Row className="m-auto">
+												{chatMembers?.map((member, index) => (
+													<Col key={index} className="text-light m-2" sm="auto" disabled>
+														{member?.name} <Badge variant="transparent">{member?.phone}</Badge>
+													</Col>
+												))}
 											</Row>
 										</Col>
 									</Row>
