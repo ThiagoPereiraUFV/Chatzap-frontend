@@ -8,8 +8,15 @@ import Linkify from "react-linkify";
 
 import "./style.css";
 
+//	Importing camera asset
+import camera from "../../assets/camera.png";
+
+//	Importing media query helper
+import { useMediaQuery } from "react-responsive";
+
 export const Chat = {
 	Infobar: ({ room, chatMembers }) => {
+		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
 
 		return (
@@ -40,11 +47,19 @@ export const Chat = {
 							<Accordion.Collapse eventKey="0">
 								<Card.Body className="p-0">
 									<Row className="m-auto">
-										<Image
-											as={Col}
-											fluid
-											src="https://portalmakingof.com.br/uploads/posts/1e8ab0f93cb7cc98abba51ea69b62c16.jpg"
-										/>
+										{sm ?
+											<Image
+												as={Col}
+												src={camera}
+												style={{ maxWidth: "100vw" }}
+											/>
+											:
+											<Image
+												as={Col}
+												src={camera}
+												style={{ maxWidth: "300px" }}
+											/>
+										}
 										<Col className="px-1">
 											<Row className="m-auto">
 												<Col className="text-light m-2">
