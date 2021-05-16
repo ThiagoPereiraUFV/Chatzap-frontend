@@ -139,7 +139,6 @@ export const Chat = {
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 						autoComplete="off"
-						autoFocus
 					/>
 					<Button
 						variant="success"
