@@ -65,6 +65,7 @@ export const Chat = {
 					setMessagePush("Algo deu errado :(");
 				}
 				setPushShow(true);
+				setRoomImage(null);
 			});
 		}
 
