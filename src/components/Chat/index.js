@@ -1,19 +1,82 @@
-import { useEffect, createRef } from "react";
+import { useEffect, createRef, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form } from "react-bootstrap";
+import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge } from "react-bootstrap";
 import { RiSendPlaneFill, RiArrowLeftLine } from "react-icons/ri";
 import { emojify } from "react-emoji";
 import Linkify from "react-linkify";
 
 import "./style.css";
 
+//	Importing camera asset
+import camera from "../../assets/camera.png";
+
+//	Importing media query helper
+import { useMediaQuery } from "react-responsive";
+
+//	Importing api to communicate to backend
+import api from "../../services/api";
+import { Push } from "../../components/Push";
+
 export const Chat = {
-	Infobar: ({ room }) => {
+	Infobar: ({ room, chatMembers, userToken }) => {
+		const [roomImage, setRoomImage] = useState(null);
+		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
+
+		//	Push notification state variables
+		const [pushShow, setPushShow] = useState(false);
+		const [messagePush, setMessagePush] = useState("");
+		const [colorPush, setColorPush] = useState("");
+
+		//	Room image preview
+		const preview = useMemo(() => {
+			return roomImage ? URL.createObjectURL(roomImage) : null;
+		}, [roomImage]);
+
+		//	Request to change room image
+		async function updateRoomImage(event, image) {
+			event.preventDefault();
+
+			const data = new FormData();
+
+			data.append("image", image);
+
+			await api.put(`/roomImage/${room?._id}`, data, {
+				headers: {
+					Authorization: `Bearer ${userToken}`
+				}
+			}).then((response) => {
+				if(response?.status === 200) {
+					setMessagePush("Imagem atualizada");
+					setColorPush("success");
+					setPushShow(true);
+				}
+			}).catch((error) => {
+				setColorPush("danger");
+				if(error.response && error.response.status === 400) {
+					const errorMessages = error.response.data;
+					setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
+				} else if(error.response && error.response.status === 404) {
+					setMessagePush(error.response.data);
+				} else if(error.response && error.response.status === 500) {
+					setMessagePush(error.message);
+				} else {
+					setMessagePush("Algo deu errado :(");
+				}
+				setPushShow(true);
+				setRoomImage(null);
+			});
+		}
 
 		return (
 			<Navbar className="m-0 p-0" bg="success" variant="light" sticky="top">
+				<Push
+					pushShow={pushShow}
+					setPushShow={setPushShow}
+					message={messagePush}
+					color={colorPush}
+				/>
 				<Nav className="w-100">
 					<Nav.Item className="w-100">
 						<Accordion>
@@ -40,10 +103,26 @@ export const Chat = {
 							<Accordion.Collapse eventKey="0">
 								<Card.Body className="p-0">
 									<Row className="m-auto">
+										<Form.Control
+											id="inputImage"
+											className="d-none"
+											type="file"
+											accept="image/*"
+											onChange={(e) => {
+												if(e.target.files[0]) {
+													setRoomImage(e.target.files[0]);
+													updateRoomImage(e, e.target.files[0]);
+												} else {
+													setRoomImage(null);
+												}
+											}}
+										/>
 										<Image
 											as={Col}
-											fluid
-											src="https://portalmakingof.com.br/uploads/posts/1e8ab0f93cb7cc98abba51ea69b62c16.jpg"
+											src={preview ? preview : (room?.image ? `${process.env.REACT_APP_API_URL}files/${room?.image}` : camera)}
+											style={{ maxWidth: sm ? "100vw" : "300px", cursor: "pointer" }}
+											onClick={() => document.getElementById("inputImage").click()}
+											alt="Selecione sua imagem"
 										/>
 										<Col className="px-1">
 											<Row className="m-auto">
@@ -55,6 +134,13 @@ export const Chat = {
 												<Col className="text-light m-2">
 													{`Membros ${room?.nMembers}`}
 												</Col>
+											</Row>
+											<Row className="m-auto">
+												{chatMembers?.map((member, index) => (
+													<Col key={index} className="text-light m-2" sm="auto" disabled>
+														{member?.name} <Badge variant="transparent">{member?.phone}</Badge>
+													</Col>
+												))}
 											</Row>
 										</Col>
 									</Row>
@@ -117,7 +203,6 @@ export const Chat = {
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
 						autoComplete="off"
-						autoFocus
 					/>
 					<Button
 						variant="success"
