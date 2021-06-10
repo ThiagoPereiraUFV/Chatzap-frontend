@@ -202,6 +202,9 @@ export const Chat = {
 					<Col key={i} className="m-0 p-0" sm="12">
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
+								<p className="sentText m-2 my-auto">
+									{new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}
+								</p>
 								<div className="messageBox backgroundBlue text-dark">
 									<p className="messageText colorWhite m-auto py-2">
 										<Linkify properties={{ target: "_blank" }}>
@@ -220,7 +223,7 @@ export const Chat = {
 									</p>
 								</div>
 								<p className="sentText m-2 my-auto">
-									{message?.userId?.name}
+									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}`}
 								</p>
 							</div>
 						}
