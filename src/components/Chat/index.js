@@ -69,6 +69,34 @@ export const Chat = {
 			});
 		}
 
+		//	Exit current room
+		async function exitRoom(event) {
+			event.preventDefault();
+
+			await api.delete(`/userRoom/${room?._id}`, {
+				headers: {
+					Authorization: `Bearer ${userToken}`
+				}
+			}).then((response) => {
+				if(response?.status === 200) {
+					history.go();
+				}
+			}).catch((error) => {
+				setColorPush("danger");
+				if(error.response && error.response.status === 400) {
+					const errorMessages = error.response.data;
+					setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
+				} else if(error.response && error.response.status === 404) {
+					setMessagePush(error.response.data);
+				} else if(error.response && error.response.status === 500) {
+					setMessagePush(error.message);
+				} else {
+					setMessagePush("Algo deu errado :(");
+				}
+				setPushShow(true);
+			});
+		}
+
 		return (
 			<Navbar className="m-0 p-0" bg="success" variant="light" sticky="top">
 				<Push
@@ -141,6 +169,16 @@ export const Chat = {
 														{member?.name} <Badge variant="transparent">{member?.phone}</Badge>
 													</Col>
 												))}
+											</Row>
+											<Row className="m-auto">
+												<Button
+													className={sm ? "w-100 m-2 px-3" : "m-2 px-3"}
+													variant="success"
+													size="sm"
+													onClick={exitRoom}
+												>
+													Sair da sala
+												</Button>
 											</Row>
 										</Col>
 									</Row>
