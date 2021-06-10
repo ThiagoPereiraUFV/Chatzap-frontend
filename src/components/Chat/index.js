@@ -69,6 +69,34 @@ export const Chat = {
 			});
 		}
 
+		//	Exit current room
+		async function exitRoom(event) {
+			event.preventDefault();
+
+			await api.delete(`/userRoom/${room?._id}`, {
+				headers: {
+					Authorization: `Bearer ${userToken}`
+				}
+			}).then((response) => {
+				if(response?.status === 200) {
+					history.go();
+				}
+			}).catch((error) => {
+				setColorPush("danger");
+				if(error.response && error.response.status === 400) {
+					const errorMessages = error.response.data;
+					setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
+				} else if(error.response && error.response.status === 404) {
+					setMessagePush(error.response.data);
+				} else if(error.response && error.response.status === 500) {
+					setMessagePush(error.message);
+				} else {
+					setMessagePush("Algo deu errado :(");
+				}
+				setPushShow(true);
+			});
+		}
+
 		return (
 			<Navbar className="m-0 p-0" bg="success" variant="light" sticky="top">
 				<Push
@@ -142,6 +170,16 @@ export const Chat = {
 													</Col>
 												))}
 											</Row>
+											<Row className="m-auto">
+												<Button
+													className={sm ? "w-100 m-2 px-3" : "m-2 px-3"}
+													variant="success"
+													size="sm"
+													onClick={exitRoom}
+												>
+													Sair da sala
+												</Button>
+											</Row>
 										</Col>
 									</Row>
 								</Card.Body>
@@ -164,6 +202,9 @@ export const Chat = {
 					<Col key={i} className="m-0 p-0" sm="12">
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
+								<p className="sentText m-2 my-auto">
+									{new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}
+								</p>
 								<div className="messageBox backgroundBlue text-dark">
 									<p className="messageText colorWhite m-auto py-2">
 										<Linkify properties={{ target: "_blank" }}>
@@ -182,7 +223,7 @@ export const Chat = {
 									</p>
 								</div>
 								<p className="sentText m-2 my-auto">
-									{message?.userId?.name}
+									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}`}
 								</p>
 							</div>
 						}
