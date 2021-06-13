@@ -2,7 +2,7 @@ import { useEffect, createRef, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge } from "react-bootstrap";
-import { RiSendPlaneFill, RiArrowLeftLine } from "react-icons/ri";
+import { RiSendPlaneFill, RiArrowLeftLine, RiCloseFill } from "react-icons/ri";
 import { emojify } from "react-emoji";
 import Linkify from "react-linkify";
 
@@ -115,7 +115,11 @@ export const Chat = {
 									size="lg"
 									onClick={() => history.push("/chats")}
 								>
-									<RiArrowLeftLine className="text-white" size="25" />
+									{sm ?
+										<RiCloseFill className="text-white my-2" size="21" />
+										:
+										<RiArrowLeftLine className="text-white my-2" size="21" />
+									}
 								</Button>
 								<Accordion.Toggle
 									as={Button}
