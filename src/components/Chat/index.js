@@ -130,7 +130,7 @@ export const Chat = {
 									eventKey="0"
 									block
 								>
-        					{room?.name}
+									{emojify(room?.name)}
 								</Accordion.Toggle>
 							</Card>
 							<Accordion.Collapse eventKey="0">

@@ -2,6 +2,7 @@ import { useHistory, Link } from "react-router-dom";
 
 import { Navbar, Nav, NavDropdown, Badge, Card, Col, Row, Form } from "react-bootstrap";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { emojify } from "react-emoji";
 
 export const ChatList = {
 	Infobar: ({ setUserToken, actions }) => {
@@ -81,7 +82,7 @@ export const ChatList = {
 						sm="12"
 					>
 						<Col className="p-0 text-left" sm="11">
-							{chat?.roomId?.name ?? chat?.name}
+							{emojify(chat?.roomId?.name ?? chat?.name)}
 						</Col>
 						<Badge
 							as={Col}
