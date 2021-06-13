@@ -15,6 +15,9 @@ import { Push } from "../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 
+//	Importing media query helper
+import { useMediaQuery } from "react-responsive";
+
 export const Chats = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
 	const [message, setMessage] = useState("");
@@ -35,6 +38,9 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 
 	//	Chat id variable
 	const chatId = queryString.parse(location?.search)?.c;
+
+	//	Media query small
+	const sm = useMediaQuery({ maxDeviceWidth: 426 });
 
 	//	Get user chatList
 	useEffect(() => {
@@ -199,33 +205,36 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				setPushShow={setPushShow}
 				message={messagePush}
 			/>
-			{!chat ?
-				<Col
-					className="bg-light m-0 p-0"
-					sm="3"
-				>
-					<ChatList.Infobar
-						actions={
-							[
-								{
-									func: setCreateRoomModal,
-									name: "Criar sala"
-								}, {
-									func: setEnterRoomModal,
-									name: "Entrar em uma sala"
-								}
-							]}
-						setUserToken={setUserToken}
-					/>
-					<ChatList.Query query={query} setQuery={setQuery} />
-					<ChatList.Chats chats={chatList} setChat={setChat} />
-				</Col>
-				:
+
+			<Col
+				className={chat && sm ? "d-none" : "bg-light m-0 p-0"}
+				sm="3"
+			>
+				<ChatList.Infobar
+					actions={
+						[
+							{
+								func: setCreateRoomModal,
+								name: "Criar sala"
+							}, {
+								func: setEnterRoomModal,
+								name: "Entrar em uma sala"
+							}
+						]}
+					setUserToken={setUserToken}
+				/>
+				<ChatList.Query query={query} setQuery={setQuery} />
+				<ChatList.Chats chats={chatList} setChat={setChat} />
+			</Col>
+
+			{chat ?
 				<Col className="d-flex p-0 flex-column">
 					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} userToken={userToken} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
+				:
+				null
 			}
 
 			<CreateRoomModal

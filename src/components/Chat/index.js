@@ -2,7 +2,7 @@ import { useEffect, createRef, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge } from "react-bootstrap";
-import { RiSendPlaneFill, RiArrowLeftLine } from "react-icons/ri";
+import { RiSendPlaneFill, RiArrowLeftLine, RiCloseFill } from "react-icons/ri";
 import { emojify } from "react-emoji";
 import Linkify from "react-linkify";
 
@@ -114,8 +114,13 @@ export const Chat = {
 									variant="success"
 									size="lg"
 									onClick={() => history.push("/chats")}
+									title="Voltar"
 								>
-									<RiArrowLeftLine className="text-white" size="25" />
+									{sm ?
+										<RiCloseFill className="text-white my-2" size="21" />
+										:
+										<RiArrowLeftLine className="text-white my-2" size="21" />
+									}
 								</Button>
 								<Accordion.Toggle
 									as={Button}
@@ -125,7 +130,7 @@ export const Chat = {
 									eventKey="0"
 									block
 								>
-        					{room?.name}
+									{emojify(room?.name)}
 								</Accordion.Toggle>
 							</Card>
 							<Accordion.Collapse eventKey="0">
@@ -155,7 +160,7 @@ export const Chat = {
 										<Col className="px-1">
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR")} por ${room?.userId?.name}`}
+													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.userId?.name}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
@@ -202,28 +207,39 @@ export const Chat = {
 					<Col key={i} className="m-0 p-0" sm="12">
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
-								<p className="sentText m-2 my-auto">
-									{new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}
-								</p>
 								<div className="messageBox backgroundBlue text-dark">
-									<p className="messageText colorWhite m-auto py-2">
-										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}
-										</Linkify>
-									</p>
+									<div className="messageText colorWhite m-auto">
+										<Row className="m-auto">
+											<Linkify properties={{ target: "_blank" }}>
+												{emojify(message?.text)}
+											</Linkify>
+										</Row>
+										<Row className="m-auto">
+											<small className="sentText ml-auto mt-2">
+												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+											</small>
+										</Row>
+									</div>
 								</div>
 							</div>
 							:
 							<div className="messageContainer justifyStart">
 								<div className="messageBox backgroundLight text-dark">
-									<p className="messageText colorDark m-auto py-2">
-										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}
-										</Linkify>
-									</p>
+									<div className="messageText colorDark m-auto">
+										<Row className="m-auto">
+											<Linkify properties={{ target: "_blank" }}>
+												{emojify(message?.text)}
+											</Linkify>
+										</Row>
+										<Row className="m-auto">
+											<small className="sentText ml-auto mt-2">
+												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+											</small>
+										</Row>
+									</div>
 								</div>
 								<p className="sentText m-2 my-auto">
-									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}`}
+									{message?.userId?.name}
 								</p>
 							</div>
 						}
@@ -250,6 +266,7 @@ export const Chat = {
 						type="submit"
 						className="rounded-circle mx-1"
 						disabled={!message || !message.length}
+						title="Enviar"
 					>
 						<RiSendPlaneFill className="m-auto" size="25" />
 					</Button>
