@@ -208,7 +208,7 @@ export const Chat = {
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
 								<div className="messageBox backgroundBlue text-dark">
-									<p className="messageText colorWhite m-auto">
+									<div className="messageText colorWhite m-auto">
 										<Row className="m-auto">
 											<Linkify properties={{ target: "_blank" }}>
 												{emojify(message?.text)}
@@ -219,13 +219,13 @@ export const Chat = {
 												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
 											</small>
 										</Row>
-									</p>
+									</div>
 								</div>
 							</div>
 							:
 							<div className="messageContainer justifyStart">
 								<div className="messageBox backgroundLight text-dark">
-									<p className="messageText colorDark m-auto">
+									<div className="messageText colorDark m-auto">
 										<Row className="m-auto">
 											<Linkify properties={{ target: "_blank" }}>
 												{emojify(message?.text)}
@@ -236,7 +236,7 @@ export const Chat = {
 												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
 											</small>
 										</Row>
-									</p>
+									</div>
 								</div>
 								<p className="sentText m-2 my-auto">
 									{message?.userId?.name}
