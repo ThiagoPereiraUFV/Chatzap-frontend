@@ -160,7 +160,7 @@ export const Chat = {
 										<Col className="px-1">
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR")} por ${room?.userId?.name}`}
+													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.userId?.name}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
@@ -208,7 +208,7 @@ export const Chat = {
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
 								<p className="sentText m-2 my-auto">
-									{new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}
+									{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
 								</p>
 								<div className="messageBox backgroundBlue text-dark">
 									<p className="messageText colorWhite m-auto py-2">
@@ -228,7 +228,7 @@ export const Chat = {
 									</p>
 								</div>
 								<p className="sentText m-2 my-auto">
-									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR")?.split(" ")[1]}`}
+									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}`}
 								</p>
 							</div>
 						}
