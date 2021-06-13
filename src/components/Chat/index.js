@@ -207,14 +207,18 @@ export const Chat = {
 					<Col key={i} className="m-0 p-0" sm="12">
 						{message?.userId?.phone === userPhone ?
 							<div className="messageContainer justifyEnd">
-								<p className="sentText m-2 my-auto">
-									{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
-								</p>
 								<div className="messageBox backgroundBlue text-dark">
 									<p className="messageText colorWhite m-auto py-2">
-										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}
-										</Linkify>
+										<Row className="m-auto">
+											<Linkify properties={{ target: "_blank" }}>
+												{emojify(message?.text)}
+											</Linkify>
+										</Row>
+										<Row className="m-auto">
+											<small className="sentText ml-auto mt-2">
+												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+											</small>
+										</Row>
 									</p>
 								</div>
 							</div>
@@ -222,13 +226,20 @@ export const Chat = {
 							<div className="messageContainer justifyStart">
 								<div className="messageBox backgroundLight text-dark">
 									<p className="messageText colorDark m-auto py-2">
-										<Linkify properties={{ target: "_blank" }}>
-											{emojify(message?.text)}
-										</Linkify>
+										<Row className="m-auto">
+											<Linkify properties={{ target: "_blank" }}>
+												{emojify(message?.text)}
+											</Linkify>
+										</Row>
+										<Row className="m-auto">
+											<small className="sentText ml-auto mt-2">
+												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+											</small>
+										</Row>
 									</p>
 								</div>
 								<p className="sentText m-2 my-auto">
-									{`${message?.userId?.name} - ${new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}`}
+									{message?.userId?.name}
 								</p>
 							</div>
 						}
