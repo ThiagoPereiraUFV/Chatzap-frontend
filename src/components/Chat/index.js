@@ -114,6 +114,7 @@ export const Chat = {
 									variant="success"
 									size="lg"
 									onClick={() => history.push("/chats")}
+									title="Voltar"
 								>
 									{sm ?
 										<RiCloseFill className="text-white my-2" size="21" />
@@ -254,6 +255,7 @@ export const Chat = {
 						type="submit"
 						className="rounded-circle mx-1"
 						disabled={!message || !message.length}
+						title="Enviar"
 					>
 						<RiSendPlaneFill className="m-auto" size="25" />
 					</Button>

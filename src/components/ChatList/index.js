@@ -41,6 +41,7 @@ export const ChatList = {
 							to="#"
 							className="p-0"
 							onClick={handleLogout}
+							title="Sair"
 						>
 							<RiLogoutCircleLine className="text-white" size="25" />
 						</Link>
