@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+import * as Sentry from "@sentry/react";
+
 import { motion } from "framer-motion";
 
 //	Importing query-string handle feature
@@ -53,11 +55,11 @@ export const Login = ({ setUserToken, location }) => {
 					history.push(`/${redirect ?? "chats"}`);
 				}
 			}).catch((error) => {
-				if(error.response && [400, 404].includes(error.response.status)) {
-					const messages = error.response.data;
-					setMessage(messages.errors ? messages.errors.join(", ") : messages);
-				} else if(error.response && error.response.status === 500) {
-					setMessage(error.message);
+				if(!error?.response || error?.response?.status === 500) {
+					Sentry.captureException(error);
+					setMessage("Erro interno, tente novamente mais tarde");
+				} else {
+					setMessage("Erro ao acessar conta, certifique se os dados estão corretos");
 				}
 				setPushShow(true);
 				setValidated(true);

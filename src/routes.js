@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
+import * as Sentry from "@sentry/react";
+
 //	Importing framer motion resources
 import { AnimatePresence } from "framer-motion";
 
@@ -50,6 +52,9 @@ export const Routes = () => {
 						setUser(response.data);
 					}
 				}).catch(() => {
+					if(!error?.response || error?.response?.status === 500) {
+						Sentry.captureException(error);
+					}
 					setUserToken(null);
 					setUser(null);
 					sessionStorage.removeItem("userToken");
