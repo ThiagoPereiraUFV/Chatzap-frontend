@@ -17,6 +17,7 @@ import api from "../../services/api";
 
 //	Importing media query helper
 import { useMediaQuery } from "react-responsive";
+import { useHistory } from "react-router";
 
 export const Chats = ({ socket, user, userToken, setUserToken }) => {
 	const [query, setQuery] = useState("");
@@ -41,6 +42,9 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 
 	//	Media query small
 	const sm = useMediaQuery({ maxDeviceWidth: 426 });
+
+	//	History
+	const history = useHistory();
 
 	//	Get user chatList
 	useEffect(() => {
@@ -127,9 +131,14 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 					setMessages((msgs) => [ ...msgs, receivedMsg ]);
 				}
 			});
+
+			socket?.on("disconnect", () => {
+				setTimeout(() => history.go(), 2000);
+			});
 		} else {
 			socket?.off("messages");
 			socket?.off("message");
+			socket?.off("disconnect");
 			setMessages([]);
 			setChatMembers([]);
 		}
