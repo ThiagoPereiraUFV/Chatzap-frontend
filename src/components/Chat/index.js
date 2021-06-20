@@ -51,6 +51,7 @@ export const Chat = {
 					setMessagePush("Imagem atualizada");
 					setColorPush("success");
 					setPushShow(true);
+					setRoomImage(null);
 				}
 			}).catch((error) => {
 				setColorPush("danger");
