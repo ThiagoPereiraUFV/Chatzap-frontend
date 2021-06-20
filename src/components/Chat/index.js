@@ -1,7 +1,7 @@
 import { useEffect, createRef, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge } from "react-bootstrap";
+import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge, Alert } from "react-bootstrap";
 import { RiSendPlaneFill, RiArrowLeftLine, RiCloseFill } from "react-icons/ri";
 import { emojify } from "react-emoji";
 import Linkify from "react-linkify";
@@ -204,44 +204,51 @@ export const Chat = {
 		return (
 			<Row ref={ref} className="py-2 mx-0 mb-auto w-100" style={{ overflowY: "auto" }}>
 				{messages.map((message, i) => (
-					<Col key={i} className="m-0 p-0" sm="12">
-						{message?.userId?.phone === userPhone ?
-							<div className="messageContainer justifyEnd">
-								<div className="messageBox backgroundBlue text-dark">
-									<div className="messageText colorWhite m-auto">
-										<Row className="m-auto">
-											<Linkify properties={{ target: "_blank" }}>
-												{emojify(message?.text)}
-											</Linkify>
-										</Row>
-										<Row className="m-auto">
-											<small className="sentText ml-auto mt-2">
-												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
-											</small>
-										</Row>
-									</div>
-								</div>
-							</div>
+					<Col key={i} className="m-0 p-0 my-2" sm="12">
+						{message?.text?.split(":")[0] === "ROOM" ?
+							<Row className="m-auto">
+								<Alert className="mx-auto my-0 py-1" variant="secondary">
+									{message?.text?.split(":")[1]}
+								</Alert>
+							</Row>
 							:
-							<div className="messageContainer justifyStart">
-								<div className="messageBox backgroundLight text-dark">
-									<div className="messageText colorDark m-auto">
-										<Row className="m-auto">
-											<Linkify properties={{ target: "_blank" }}>
-												{emojify(message?.text)}
-											</Linkify>
-										</Row>
-										<Row className="m-auto">
-											<small className="sentText ml-auto mt-2">
-												{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
-											</small>
-										</Row>
+							message?.userId?.phone === userPhone ?
+								<div className="messageContainer justifyEnd">
+									<div className="messageBox backgroundBlue text-dark">
+										<div className="messageText colorWhite m-auto">
+											<Row className="m-auto">
+												<Linkify properties={{ target: "_blank" }}>
+													{emojify(message?.text)}
+												</Linkify>
+											</Row>
+											<Row className="m-auto">
+												<small className="sentText ml-auto mt-2">
+													{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+												</small>
+											</Row>
+										</div>
 									</div>
 								</div>
-								<p className="sentText m-2 my-auto">
-									{message?.userId?.name}
-								</p>
-							</div>
+								:
+								<div className="messageContainer justifyStart">
+									<div className="messageBox backgroundLight text-dark">
+										<div className="messageText colorDark m-auto">
+											<Row className="m-auto">
+												<Linkify properties={{ target: "_blank" }}>
+													{emojify(message?.text)}
+												</Linkify>
+											</Row>
+											<Row className="m-auto">
+												<small className="sentText ml-auto mt-2">
+													{new Date(message?.createdAt)?.toLocaleString("pt-BR", {timeStyle: "short"})?.split(" ")}
+												</small>
+											</Row>
+										</div>
+									</div>
+									<p className="sentText m-2 my-auto">
+										{message?.userId?.name}
+									</p>
+								</div>
 						}
 					</Col>
 				))}
