@@ -37,6 +37,7 @@ This project was built using following technologies:
 - [ReactJS](https://reactjs.org/)
 - [React Bootstrap](https://react-bootstrap.github.io/)
 - [socket.io](https://socket.io/)
+- [sentry.io](https://sentry.io/)
 
 ## :computer: Project
 
