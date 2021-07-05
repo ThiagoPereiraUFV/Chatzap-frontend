@@ -10,6 +10,7 @@ Sentry.init({
 	dsn: "https://bd8b19ac1d7245ceb7eb658dd7c61d9f@o851448.ingest.sentry.io/5818363",
 	integrations: [new Integrations.BrowserTracing()],
 	environment: process.env.NODE_ENV,
+	release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
 
 	// Set tracesSampleRate to 1.0 to capture 100%
 	// of transactions for performance monitoring.
