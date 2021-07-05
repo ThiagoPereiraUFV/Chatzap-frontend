@@ -32,7 +32,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "push": "yarn version --patch && git push --follow-tags"
+    "patch": "yarn version --patch && git push --follow-tags",
+    "release": "yarn version --major && git push --follow-tags"
   },
   "eslintConfig": {
     "extends": [
