@@ -51,7 +51,7 @@ export const Routes = () => {
 					if(response && response.status === 200) {
 						setUser(response.data);
 					}
-				}).catch(() => {
+				}).catch((error) => {
 					if(!error?.response || error?.response?.status === 500) {
 						Sentry.captureException(error);
 					}
