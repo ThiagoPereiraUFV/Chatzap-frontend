@@ -1,6 +1,6 @@
 {
   "name": "chatzap-frontend",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "engines": {
     "node": "14.x"
   },
@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "push": "yarn version --patch && git push"
+    "push": "yarn version --patch --no-git-tag-version && git push"
   },
   "eslintConfig": {
     "extends": [
