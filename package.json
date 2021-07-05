@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "push": "yarn version --patch && git add ./package.json && git commit -m 'New patch' && git push"
+    "push": "yarn version --patch && git push"
   },
   "eslintConfig": {
     "extends": [
