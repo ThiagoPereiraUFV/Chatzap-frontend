@@ -1,8 +1,15 @@
 //	Importing React Bootstrap features
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Alert } from "react-bootstrap";
 
-export function Push({ pushShow, setPushShow, message, color }) {
+interface PushTypes {
+	pushShow: boolean,
+	setPushShow: React.Dispatch<React.SetStateAction<boolean>>,
+	message: string,
+	color: string
+}
+
+export function Push({ pushShow, setPushShow, message, color }: PushTypes) {
 	useEffect(() => {
 		if(pushShow) {
 			setTimeout(() => {

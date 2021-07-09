@@ -1,13 +1,23 @@
+import React, { FormEvent } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
-export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, setEnterRoomModal }) => (
-	<Modal size="md" show={enterRoomModal} onHide={() => setEnterRoomModal(false)} centered>
+interface EnterRoomModalTypes {
+	roomId: string,
+	setRoomId(value: string): React.Dispatch<React.SetStateAction<boolean>>,
+	enterRoom(event: FormEvent): Promise<void>,
+	enterRoomModal: boolean,
+	setEnterRoomModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, setEnterRoomModal }: EnterRoomModalTypes) => (
+	<Modal show={enterRoomModal} onHide={() => setEnterRoomModal(false)} centered>
 		<Modal.Header closeButton>
 			<Modal.Title>Entrar em uma sala</Modal.Title>
 		</Modal.Header>
 		<Modal.Body>
 			<Form className="my-3" onSubmit={(e) => {
-				enterRoom(e); setEnterRoomModal(false);
+				enterRoom(e);
+				setEnterRoomModal(false);
 			}}>
 				<Form.Group controlId="roomId">
 					<Form.Label>Id da sala</Form.Label>
@@ -29,7 +39,8 @@ export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, s
 			<Button
 				variant="success"
 				onClick={(e) => {
-					enterRoom(e); setEnterRoomModal(false);
+					enterRoom(e);
+					setEnterRoomModal(false);
 				}}
 				disabled={!roomId?.length}
 			>
