@@ -1,6 +1,6 @@
 //	Importing React and Router resources
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { BrowserRouter, Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 
 import * as Sentry from "@sentry/react";
 
@@ -18,23 +18,24 @@ import { NotFound } from "./pages/Website/NotFound";
 import { Loading } from "./components/Loading";
 
 //	Importing socket resources
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 //	Importing api to communicate to backend
 import api from "./services/api";
+import { StaticContext } from "react-router";
 
 //	Exporting Routes
 export const Routes = () => {
 	//	Socket variable
-	const [socket, setSocket] = useState(null);
+	const [socket, setSocket] = useState<Socket | null>(null);
 
 	//	User state variables
 	const [userToken, setUserToken] = useState(sessionStorage.getItem("userToken")?.length ?
-		sessionStorage.getItem("userToken")
+		(sessionStorage.getItem("userToken") ?? "")
 		:
-		localStorage.getItem("userToken")
+		(localStorage.getItem("userToken") ?? "")
 	);
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState<any>(null);
 
 	//	Loading component state variable
 	const [isLoading, setLoading] = useState(true);
@@ -55,7 +56,7 @@ export const Routes = () => {
 					if(!error?.response || error?.response?.status === 500) {
 						Sentry.captureException(error);
 					}
-					setUserToken(null);
+					setUserToken("");
 					setUser(null);
 					sessionStorage.removeItem("userToken");
 					localStorage.removeItem("userToken");
@@ -71,15 +72,13 @@ export const Routes = () => {
 	//	Socket connection
 	useEffect(() => {
 		if(user) {
-			const wsConn = io(process.env.REACT_APP_API_URL, {
+			const wsConn = io(process.env.REACT_APP_API_URL ?? "", {
 				transports: ["websocket"]
 			});
 
 			wsConn?.emit("online", user?._id);
 
 			setSocket(wsConn);
-
-			return () => socket?.disconnect();
 		}
 
 	}, [user]);
@@ -87,7 +86,7 @@ export const Routes = () => {
 	const userAuth = userToken && userToken.length;
 
 	if(isLoading) {
-		return (<Loading />);
+		return <Loading animation="border" />;
 	}
 
 	return (
@@ -110,7 +109,7 @@ export const Routes = () => {
 					/>
 					<Route
 						path="/login"
-						component={({ location }) => !userAuth ?
+						component={({ location }: RouteComponentProps<any, StaticContext, unknown>) => !userAuth ?
 							<Login setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chats" />
@@ -118,7 +117,7 @@ export const Routes = () => {
 					/>
 					<Route
 						path="/signup"
-						component={({ location }) => !userAuth ?
+						component={({ location }: RouteComponentProps<any, StaticContext, unknown>) => !userAuth ?
 							<Signup setUserToken={setUserToken} location={location} />
 							:
 							<Redirect to="/chats" />

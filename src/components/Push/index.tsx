@@ -1,12 +1,12 @@
 //	Importing React Bootstrap features
-import React, { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Alert } from "react-bootstrap";
 
 interface PushTypes {
 	pushShow: boolean,
-	setPushShow: React.Dispatch<React.SetStateAction<boolean>>,
+	setPushShow: Dispatch<SetStateAction<boolean>>,
 	message: string,
-	color: string
+	color?: string
 }
 
 export function Push({ pushShow, setPushShow, message, color }: PushTypes) {

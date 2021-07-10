@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import * as Sentry from "@sentry/react";
@@ -17,10 +17,13 @@ import { Push } from "../../../components/Push";
 //	Importing api to communicate to backend
 import api from "../../../services/api";
 
-export const Login = ({ setUserToken, location }) => {
+export const Signup = ({ setUserToken, location }: { setUserToken: Dispatch<SetStateAction<string>>, location: any }) => {
 	//	User state variables
+	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [passwordC, setPasswordC] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
 
 	//	Message settings
@@ -33,15 +36,18 @@ export const Login = ({ setUserToken, location }) => {
 
 	const history = useHistory();
 
-	async function handleLogin(event) {
+	async function handleSignup(event: FormEvent) {
 		event.preventDefault();
 
 		const data = {
+			name,
 			phone,
-			password
+			email,
+			password,
+			passwordC
 		};
 
-		await api.post("/session", data)
+		await api.post("/user", data)
 			.then((response) => {
 				if(response && response.status === 201) {
 					if(rememberMe) {
@@ -59,40 +65,63 @@ export const Login = ({ setUserToken, location }) => {
 					Sentry.captureException(error);
 					setMessage("Erro interno, tente novamente mais tarde");
 				} else {
-					setMessage("Erro ao acessar conta, certifique se os dados estão corretos");
+					setMessage("Erro ao criar conta, certifique se os dados são válidos");
 				}
-				setPushShow(true);
 				setValidated(true);
+				setPushShow(true);
 			});
 	}
 
 	return (
 		<motion.div
-			as={Container}
+			// as={Container}
 			className="m-auto w-100"
 			initial={{ opacity: 0, x: 300 }}
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1, x: 0 }}
 		>
 			<Push pushShow={pushShow} setPushShow={setPushShow} message={message} />
-			<Col className="m-auto" sm="3">
-				<Form noValidate validated={validated} onSubmit={handleLogin}>
+			<Col className="m-auto" lg="8" md="6">
+				<Form noValidate validated={validated} onSubmit={handleSignup}>
 					<Row>
-						<Form.Group as={Col} controlId="phone" sm="12">
+						<Form.Group as={Col} controlId="name" sm="6">
+							<Form.Label>Seu nome</Form.Label>
+							<Form.Control
+								type="text"
+								placeholder="ex. Mateus"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								autoFocus
+								required
+							/>
+							<Form.Control.Feedback type="invalid">
+								Digite seu nome
+							</Form.Control.Feedback>
+						</Form.Group>
+						<Form.Group as={Col} controlId="phone" sm="6">
 							<Form.Label>Seu número</Form.Label>
 							<Form.Control
 								type="tel"
 								placeholder="ex. (31) 99999-9999"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
-								autoFocus
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
-              	Digite um número de telefone válido
+								Digite um número de telefone válido
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group as={Col} controlId="password" sm="12">
+						<Form.Group as={Col} controlId="email" sm="6">
+							<Form.Label>Seu email</Form.Label>
+							<Form.Control
+								type="email"
+								placeholder="ex. exemplo@provedor.com"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+							/>
+							<Form.Text muted>Opcional</Form.Text>
+						</Form.Group>
+						<Form.Group as={Col} controlId="password" sm="6">
 							<Form.Label>Sua senha</Form.Label>
 							<Form.Control
 								type="password"
@@ -102,29 +131,43 @@ export const Login = ({ setUserToken, location }) => {
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
-              	Digite uma senha
+								Digite uma senha
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group as={Col} controlId="rememberMe" sm="12">
+						<Form.Group as={Col} controlId="passwordC" sm="6">
+							<Form.Label>Confirme sua senha</Form.Label>
+							<Form.Control
+								type="password"
+								placeholder="Confirmação da senha"
+								value={passwordC}
+								onChange={(e) => setPasswordC(e.target.value)}
+								required
+							/>
+							<Form.Control.Feedback type="invalid">
+								Confirme sua senha
+							</Form.Control.Feedback>
+						</Form.Group>
+						<Form.Group as={Col} controlId="rememberMe" sm="6">
+							<Form.Label>Lembrar de mim?</Form.Label>
 							<Form.Check
 								type="switch"
-								label="Lembrar de mim?"
+								label={rememberMe ? "Sim" : "Não"}
 								checked={rememberMe}
 								onChange={(e) => setRememberMe(e.target.checked)}
 							/>
 						</Form.Group>
 						<Col className="text-center my-2" sm="12">
-							<small>Não tem conta? </small>
-							<Link className="text-success" to={`/signup?r=${redirect ?? "chats"}`}>
+							<small>Já tem conta? </small>
+							<Link className="text-success" to={`/login?r=${redirect ?? "chat"}`}>
 								<small>Clique aqui</small>
 							</Link>
-							<small> para se cadastrar</small>
+							<small> para acessar</small>
 						</Col>
 						<Col className="text-center my-2" sm="12">
 							<Button
 								variant="success"
 								type="submit"
-								disabled={!phone || !password}
+								disabled={!name || !phone || !password || !passwordC}
 							>
 								Continuar
 							</Button>

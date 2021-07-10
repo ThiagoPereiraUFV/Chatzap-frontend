@@ -1,4 +1,4 @@
-import React, { useEffect, createRef, useMemo, useState, FormEvent } from "react";
+import { Dispatch, SetStateAction, useEffect, createRef, useMemo, useState, FormEvent } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge, Alert } from "react-bootstrap";
@@ -25,7 +25,7 @@ interface InfobarTypes {
 }
 
 interface InputTypes {
-	setMessage: React.Dispatch<React.SetStateAction<string>>,
+	setMessage: Dispatch<SetStateAction<string>>,
 	sendMessage(event: FormEvent): void,
 	message: string
 }

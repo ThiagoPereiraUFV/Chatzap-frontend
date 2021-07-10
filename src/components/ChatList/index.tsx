@@ -1,11 +1,11 @@
 import { useHistory, Link } from "react-router-dom";
-import React, { FormEvent } from "react";
+import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Navbar, Nav, NavDropdown, Badge, Card, Col, Row, Form } from "react-bootstrap";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { emojify } from "react-emoji";
 
 export const ChatList = {
-	Infobar: ({ setUserToken, actions }: { setUserToken: React.Dispatch<React.SetStateAction<string | null>>, actions: Array<any> }) => {
+	Infobar: ({ setUserToken, actions }: { setUserToken: Dispatch<SetStateAction<string>>, actions: Array<any> }) => {
 		//	Defining history to jump through pages
 		const history = useHistory();
 
@@ -15,7 +15,7 @@ export const ChatList = {
 
 			sessionStorage.removeItem("userToken");
 			localStorage.removeItem("userToken");
-			setUserToken(null);
+			setUserToken("");
 
 			history.push("/");
 		}
@@ -27,7 +27,7 @@ export const ChatList = {
 						<Navbar.Brand className="text-light font-weight-bold">Chatzap</Navbar.Brand>
 					</Nav.Item>
 					<Nav.Item>
-						<NavDropdown className="p-0" id="dropdown" title="Options">
+						<NavDropdown className="p-0" id="dropdown" title="">
 							{actions?.map((action, index) => (
 								<NavDropdown.Item key={index} onClick={() => action?.func(true)}>
 									{action?.name}
@@ -51,7 +51,7 @@ export const ChatList = {
 			</Navbar>
 		);
 	},
-	Query: ({ query, setQuery }: { query: string, setQuery: React.Dispatch<React.SetStateAction<string>> }) => (
+	Query: ({ query, setQuery }: { query: string, setQuery: Dispatch<SetStateAction<string>> }) => (
 		<Form onSubmit={(e) => e.preventDefault()}>
 			<Form.Group className="m-1 h-100" controlId="input">
 				<Form.Control

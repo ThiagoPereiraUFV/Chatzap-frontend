@@ -1,12 +1,12 @@
-import React, { FormEvent } from "react";
+import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 interface CreateRoomModalTypes {
 	roomName: string,
-	setRoomName(value: string): React.Dispatch<React.SetStateAction<boolean>>,
+	setRoomName: Dispatch<SetStateAction<string>>,
 	createRoom(event: FormEvent): Promise<void>,
 	createRoomModal: boolean,
-	setCreateRoomModal: React.Dispatch<React.SetStateAction<boolean>>
+	setCreateRoomModal: Dispatch<SetStateAction<boolean>>
 }
 
 export const CreateRoomModal = ({ roomName, setRoomName, createRoom, createRoomModal, setCreateRoomModal }: CreateRoomModalTypes) => (
