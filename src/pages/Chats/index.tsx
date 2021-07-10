@@ -1,5 +1,6 @@
-//  Importing React and socket.io resources
-import { Dispatch, SetStateAction, useState, useEffect, FormEvent } from "react";
+//  Importing React and Router
+import { useState, useEffect, FormEvent } from "react";
+import { useHistory } from "react-router";
 
 import { Col, Container } from "react-bootstrap";
 
@@ -17,16 +18,12 @@ import api from "../../services/api";
 
 //	Importing media query helper
 import { useMediaQuery } from "react-responsive";
-import { useHistory } from "react-router";
 
-interface ChatsProps {
-	socket: any,
-	user: any,
-	userToken: string
-	setUserToken: Dispatch<SetStateAction<string>>
-}
+//	Importing auth user data
+import { useAuth } from "../../hooks/useAuth";
 
-export const Chats = ({ socket, user, userToken, setUserToken }: ChatsProps) => {
+export const Chats = () => {
+	const { user, userToken, socket } = useAuth();
 	const [query, setQuery] = useState<string>("");
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<any>([]);
@@ -237,7 +234,6 @@ export const Chats = ({ socket, user, userToken, setUserToken }: ChatsProps) => 
 								name: "Entrar em uma sala"
 							}
 						]}
-					setUserToken={setUserToken}
 				/>
 				<ChatList.Query query={query} setQuery={setQuery} />
 				<ChatList.Chats chats={chatList} />
@@ -245,7 +241,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }: ChatsProps) => 
 
 			{chat ?
 				<Col className="d-flex p-0 flex-column">
-					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} userToken={userToken} />
+					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>

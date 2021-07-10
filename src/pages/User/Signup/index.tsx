@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import * as Sentry from "@sentry/react";
@@ -16,8 +16,10 @@ import { Push } from "../../../components/Push";
 
 //	Importing api to communicate to backend
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/useAuth";
 
-export const Signup = ({ setUserToken, location }: { setUserToken: Dispatch<SetStateAction<string>>, location: any }) => {
+export const Signup = ({ location }: { location: any }) => {
+	const { setUserToken } = useAuth();
 	//	User state variables
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");

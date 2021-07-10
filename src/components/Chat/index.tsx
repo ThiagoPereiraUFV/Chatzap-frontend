@@ -17,11 +17,11 @@ import { useMediaQuery } from "react-responsive";
 //	Importing api to communicate to backend
 import api from "../../services/api";
 import { Push } from "../Push";
+import { useAuth } from "../../hooks/useAuth";
 
 interface InfobarTypes {
 	room: any,
-	chatMembers: Array<any>,
-	userToken: string
+	chatMembers: Array<any>
 }
 
 interface InputTypes {
@@ -31,7 +31,8 @@ interface InputTypes {
 }
 
 export const Chat = {
-	Infobar: ({ room, chatMembers, userToken }: InfobarTypes) => {
+	Infobar: ({ room, chatMembers }: InfobarTypes) => {
+		const { userToken } = useAuth();
 		const [roomImage, setRoomImage] = useState<File | null>(null);
 		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
@@ -208,7 +209,7 @@ export const Chat = {
 			</Navbar>
 		);
 	},
-	Messages: ({ messages, userPhone }: { messages: Array<any>, userPhone: string }) => {
+	Messages: ({ messages, userPhone }: { messages: Array<any>, userPhone: string | undefined }) => {
 		const ref = createRef<HTMLInputElement>();
 		useEffect(() => {
 			ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: "smooth" });
