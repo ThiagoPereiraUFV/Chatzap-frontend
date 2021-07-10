@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import zap from "../../../assets/zap.ico";
 
 //	Exporting Home page
-export const Home = ({ userToken }) => (
+export const Home = ({ userToken }: { userToken: string }) => (
 	<motion.div
-		as={Container}
+		// as={Container}
 		className="my-auto px-4"
 		initial={{ opacity: 0, y: -100 }}
 		exit={{ opacity: 0 }}

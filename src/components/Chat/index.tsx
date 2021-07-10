@@ -164,6 +164,7 @@ export const Chat = {
 											}}
 										/>
 										<Image
+											// as={Col}
 											src={preview ? preview : (room?.image ? `${process.env.REACT_APP_API_URL}files/${room?.image}` : camera)}
 											style={{ maxWidth: sm ? "100vw" : "300px", cursor: "pointer" }}
 											onClick={() => document.getElementById("inputImage")?.click()}
