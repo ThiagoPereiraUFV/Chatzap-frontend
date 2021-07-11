@@ -9,6 +9,7 @@ import * as Sentry from "@sentry/react";
 
 //	Importing socket resources
 import io, { Socket } from "socket.io-client";
+import { Loading } from "../components/Loading";
 
 //	Defining User interface
 interface User {
@@ -45,6 +46,9 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 	//	Socket data
 	const [socket, setSocket] = useState<Socket | null>(null);
 
+	//	Loader data
+	const [loading, setLoading] = useState(true);
+
 	//	Get logged user data
 	useEffect(() => {
 		async function fetchData() {
@@ -67,6 +71,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 					localStorage.removeItem("userToken");
 				});
 			}
+
+			setLoading(false);
 		}
 
 		fetchData();
@@ -84,6 +90,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 			setSocket(wsConn);
 		}
 	}, [user]);
+
+	if(loading) {
+		return (<Loading animation="border" />);
+	}
 
 	if(user && userToken && socket) {
 		return (
