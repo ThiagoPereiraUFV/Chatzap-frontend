@@ -28,7 +28,6 @@ interface User {
 interface AuthContextType {
 	user: User | null,
 	userToken: string | null,
-	setUserToken: Dispatch<SetStateAction<string | null>>,
 	socket: Socket | null
 }
 
@@ -97,7 +96,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
 	if(user && userToken && socket) {
 		return (
-			<AuthContext.Provider value={{ user, userToken, setUserToken, socket }}>
+			<AuthContext.Provider value={{ user, userToken, socket }}>
 				{children}
 			</AuthContext.Provider>
 		);

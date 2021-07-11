@@ -3,11 +3,9 @@ import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Navbar, Nav, NavDropdown, Badge, Card, Col, Row, Form } from "react-bootstrap";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { emojify } from "react-emoji";
-import { useAuth } from "../../hooks/useAuth";
 
 export const ChatList = {
 	Infobar: ({ actions }: { actions: Array<any> }) => {
-		const { setUserToken } = useAuth();
 		//	Defining history to jump through pages
 		const history = useHistory();
 
@@ -17,9 +15,9 @@ export const ChatList = {
 
 			sessionStorage.removeItem("userToken");
 			localStorage.removeItem("userToken");
-			setUserToken("");
 
 			history.push("/");
+			history.go(0);
 		}
 
 		return (

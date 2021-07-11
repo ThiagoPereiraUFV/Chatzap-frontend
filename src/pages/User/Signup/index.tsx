@@ -16,10 +16,8 @@ import { Push } from "../../../components/Push";
 
 //	Importing api to communicate to backend
 import api from "../../../services/api";
-import { useAuth } from "../../../hooks/useAuth";
 
 export const Signup = ({ location }: { location: any }) => {
-	const { setUserToken } = useAuth();
 	//	User state variables
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
@@ -58,9 +56,7 @@ export const Signup = ({ location }: { location: any }) => {
 						sessionStorage.setItem("userToken", response.data.token);
 					}
 
-					setUserToken(response.data.token);
-
-					history.push(`/${redirect ?? "chats"}`);
+					history.go(0);
 				}
 			}).catch((error) => {
 				if(!error?.response || error?.response?.status === 500) {
