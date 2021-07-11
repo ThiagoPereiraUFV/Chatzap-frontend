@@ -1,5 +1,5 @@
 //  Importing React, ReactDOM and App resources
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import { App } from "./App";
 import * as Sentry from "@sentry/react";
@@ -21,8 +21,8 @@ Sentry.init({
 
 //  Rendering App
 ReactDOM.render(
-	<React.StrictMode>
+	<StrictMode>
 		<App />
-	</React.StrictMode>,
+	</StrictMode>,
 	document.getElementById("root")
 );

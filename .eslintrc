@@ -15,7 +15,7 @@
       "version": "detect"
     }
   },
-	"parser": "babel-eslint",
+	"parser": "@typescript-eslint/parser",
 	"rules": {
 		"react/react-in-jsx-scope": "off",
 		"react/prop-types": "off",
@@ -127,7 +127,7 @@
 		"no-compare-neg-zero": 2,
 		"no-cond-assign": 2,
 		"no-const-assign": 2,
-		"no-constant-condition": 2,
+		"no-constant-condition": "warn",
 		"no-constructor-return": 2,
 		"no-continue": 2,
 		"no-control-regex": 2,
@@ -216,7 +216,7 @@
 		"no-this-before-super": 2,
 		"no-throw-literal": 2,
 		"no-trailing-spaces": "warn",
-		"no-undef": 2,
+		"no-undef": "warn",
 		"no-undef-init": 2,
 		"no-undefined": "warn",
 		"no-unexpected-multiline": 2,

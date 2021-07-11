@@ -1,4 +1,4 @@
-import { useEffect, createRef, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, createRef, useMemo, useState, FormEvent } from "react";
 import { useHistory } from "react-router-dom";
 
 import { Navbar, Nav, Accordion, Card, Button, Image, Row, Col, Form, Badge, Alert } from "react-bootstrap";
@@ -16,11 +16,24 @@ import { useMediaQuery } from "react-responsive";
 
 //	Importing api to communicate to backend
 import api from "../../services/api";
-import { Push } from "../../components/Push";
+import { Push } from "../Push";
+import { useAuth } from "../../hooks/useAuth";
+
+interface InfobarProps {
+	room: any,
+	chatMembers: Array<any>
+}
+
+interface InputProps {
+	setMessage: Dispatch<SetStateAction<string>>,
+	sendMessage(event: FormEvent): void,
+	message: string
+}
 
 export const Chat = {
-	Infobar: ({ room, chatMembers, userToken }) => {
-		const [roomImage, setRoomImage] = useState(null);
+	Infobar: ({ room, chatMembers }: InfobarProps) => {
+		const { userToken } = useAuth();
+		const [roomImage, setRoomImage] = useState<File | null>(null);
 		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
 
@@ -35,7 +48,7 @@ export const Chat = {
 		}, [roomImage]);
 
 		//	Request to change room image
-		async function updateRoomImage(event, image) {
+		async function updateRoomImage(event: any, image: any) {
 			event.preventDefault();
 
 			const data = new FormData();
@@ -71,7 +84,7 @@ export const Chat = {
 		}
 
 		//	Exit current room
-		async function exitRoom(event) {
+		async function exitRoom(event: FormEvent) {
 			event.preventDefault();
 
 			await api.delete(`/userRoom/${room?._id}`, {
@@ -80,7 +93,7 @@ export const Chat = {
 				}
 			}).then((response) => {
 				if(response?.status === 200) {
-					history.go();
+					history.go(0);
 				}
 			}).catch((error) => {
 				setColorPush("danger");
@@ -142,20 +155,20 @@ export const Chat = {
 											className="d-none"
 											type="file"
 											accept="image/*"
-											onChange={(e) => {
-												if(e.target.files[0]) {
-													setRoomImage(e.target.files[0]);
-													updateRoomImage(e, e.target.files[0]);
+											onChange={(e: any) => {
+												if(e?.target?.files) {
+													setRoomImage(e.target?.files[0]);
+													updateRoomImage(e, e.target?.files[0]);
 												} else {
 													setRoomImage(null);
 												}
 											}}
 										/>
 										<Image
-											as={Col}
+											// as={Col}
 											src={preview ? preview : (room?.image ? `${process.env.REACT_APP_API_URL}files/${room?.image}` : camera)}
 											style={{ maxWidth: sm ? "100vw" : "300px", cursor: "pointer" }}
-											onClick={() => document.getElementById("inputImage").click()}
+											onClick={() => document.getElementById("inputImage")?.click()}
 											alt="Selecione sua imagem"
 										/>
 										<Col className="px-1">
@@ -171,7 +184,7 @@ export const Chat = {
 											</Row>
 											<Row className="m-auto">
 												{chatMembers?.map((member, index) => (
-													<Col key={index} className="text-light m-2" sm="auto" disabled>
+													<Col key={index} className="text-light m-2" sm="auto">
 														{member?.name} <Badge variant="transparent">{member?.phone}</Badge>
 													</Col>
 												))}
@@ -196,8 +209,8 @@ export const Chat = {
 			</Navbar>
 		);
 	},
-	Messages: ({ messages, userPhone }) => {
-		const ref = createRef();
+	Messages: ({ messages, userPhone }: { messages: Array<any>, userPhone: string | undefined }) => {
+		const ref = createRef<HTMLInputElement>();
 		useEffect(() => {
 			ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: "smooth" });
 		}, [messages]);
@@ -218,7 +231,7 @@ export const Chat = {
 									<div className="messageBox backgroundBlue text-dark">
 										<div className="messageText colorWhite m-auto">
 											<Row className="m-auto">
-												<Linkify properties={{ target: "_blank" }}>
+												<Linkify>
 													{emojify(message?.text)}
 												</Linkify>
 											</Row>
@@ -235,7 +248,7 @@ export const Chat = {
 									<div className="messageBox backgroundLight text-dark">
 										<div className="messageText colorDark m-auto">
 											<Row className="m-auto">
-												<Linkify properties={{ target: "_blank" }}>
+												<Linkify>
 													{emojify(message?.text)}
 												</Linkify>
 											</Row>
@@ -256,7 +269,7 @@ export const Chat = {
 			</Row>
 		);
 	},
-	Input: ({ setMessage, sendMessage, message }) => (
+	Input: ({ setMessage, sendMessage, message }: InputProps) => (
 		<Form onSubmit={sendMessage}>
 			<Form.Group className="m-0 h-100" controlId="message">
 				<Row className="px-2 py-2 m-auto flex-nowrap">

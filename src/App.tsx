@@ -4,5 +4,12 @@ import { Routes } from "./routes";
 //	Importing global styles
 import "./global.css";
 
+//	Importing Auth context
+import { AuthContextProvider } from "./contexts/AuthContext";
+
 //	Exporting app component
-export const App = () => (<Routes />);
+export const App = () => (
+	<AuthContextProvider>
+		<Routes />
+	</AuthContextProvider>
+);

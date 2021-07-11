@@ -1,6 +1,3 @@
-//	Importing React main module and its features
-import React from "react";
-
 //	Importing React Bootstrap features
 import { Col } from "react-bootstrap";
 

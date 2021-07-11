@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 //	Exporting Not Found page
 export const NotFound = () => (
 	<motion.div
-		as={Container}
+		// as={Container}
 		className="my-auto px-4"
 		initial={{ opacity: 0 }}
 		exit={{ opacity: 0 }}

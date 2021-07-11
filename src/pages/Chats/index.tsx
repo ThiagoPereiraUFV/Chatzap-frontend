@@ -1,5 +1,6 @@
-//  Importing React and socket.io resources
-import { useState, useEffect } from "react";
+//  Importing React and Router
+import { useState, useEffect, FormEvent } from "react";
+import { useHistory } from "react-router";
 
 import { Col, Container } from "react-bootstrap";
 
@@ -17,14 +18,17 @@ import api from "../../services/api";
 
 //	Importing media query helper
 import { useMediaQuery } from "react-responsive";
-import { useHistory } from "react-router";
 
-export const Chats = ({ socket, user, userToken, setUserToken }) => {
-	const [query, setQuery] = useState("");
+//	Importing auth user data
+import { useAuth } from "../../hooks/useAuth";
+
+export const Chats = () => {
+	const { user, userToken, socket } = useAuth();
+	const [query, setQuery] = useState<string>("");
 	const [message, setMessage] = useState("");
-	const [messages, setMessages] = useState([]);
+	const [messages, setMessages] = useState<any>([]);
 	const [chatList, setChatList] = useState([]);
-	const [chat, setChat] = useState(null);
+	const [chat, setChat] = useState<any>(null);
 	const [chatMembers, setChatMembers] = useState([]);
 
 	//	Push notification state variables
@@ -56,7 +60,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 					}
 				}).then((response) => {
 					if(response && response.status === 200) {
-						setChatList(response.data.filter((c) => c?.roomId));
+						setChatList(response.data.filter((c: any) => c?.roomId));
 					}
 				}).catch(() => {
 					setChatList([]);
@@ -111,7 +115,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 				}
 			}).then((response) => {
 				if(response && response.status === 200) {
-					setChatMembers(response.data?.map((m) => m?.userId));
+					setChatMembers(response.data?.map((m: any) => m?.userId));
 				}
 			}).catch(() => {
 				setChat(null);
@@ -122,18 +126,18 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 			fetchData();
 			socket?.emit("getMessages", chat?.roomId?._id);
 
-			socket?.on("messages", (roomMessages) => {
+			socket?.on("messages", (roomMessages: Array<any>) => {
 				setMessages(roomMessages);
 			});
 
-			socket?.on("message", (receivedMsg) => {
+			socket?.on("message", (receivedMsg: any) => {
 				if(receivedMsg?.roomId === chat?.roomId?._id) {
-					setMessages((msgs) => [ ...msgs, receivedMsg ]);
+					setMessages((msgs: Array<any>) => [ ...msgs, receivedMsg ]);
 				}
 			});
 
 			socket?.on("disconnect", () => {
-				setTimeout(() => history.go(), 2000);
+				setTimeout(() => history.go(0), 2000);
 			});
 		} else {
 			socket?.off("messages");
@@ -144,7 +148,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 		}
 	}, [chat]);
 
-	async function createRoom(event) {
+	async function createRoom(event: FormEvent) {
 		event.preventDefault();
 
 		await api.post("/room", { name: roomName }, {
@@ -153,7 +157,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery(null);
+				setQuery("");
 				socket?.emit("joinRoom", response.data?._id);
 			}
 		}).catch((error) => {
@@ -171,7 +175,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 		setRoomName("");
 	}
 
-	async function enterRoom(event) {
+	async function enterRoom(event: FormEvent) {
 		event.preventDefault();
 
 		await api.post(`/userRoom/${roomId}`, {}, {
@@ -180,7 +184,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery(null);
+				setQuery("");
 				socket?.emit("joinRoom", response.data?.roomId);
 			}
 		}).catch((error) => {
@@ -198,7 +202,7 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 		setRoomId("");
 	}
 
-	function sendMessage(event) {
+	function sendMessage(event: FormEvent) {
 		event.preventDefault();
 
 		if(message) {
@@ -230,15 +234,14 @@ export const Chats = ({ socket, user, userToken, setUserToken }) => {
 								name: "Entrar em uma sala"
 							}
 						]}
-					setUserToken={setUserToken}
 				/>
 				<ChatList.Query query={query} setQuery={setQuery} />
-				<ChatList.Chats chats={chatList} setChat={setChat} />
+				<ChatList.Chats chats={chatList} />
 			</Col>
 
 			{chat ?
 				<Col className="d-flex p-0 flex-column">
-					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} userToken={userToken} />
+					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>
