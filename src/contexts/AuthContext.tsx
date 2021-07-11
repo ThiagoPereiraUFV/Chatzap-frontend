@@ -85,9 +85,17 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 		}
 	}, [user]);
 
-	return (
-		<AuthContext.Provider value={{ user, userToken, setUserToken, socket }}>
-			{children}
-		</AuthContext.Provider>
-	);
+	if(user && userToken && socket) {
+		return (
+			<AuthContext.Provider value={{ user, userToken, setUserToken, socket }}>
+				{children}
+			</AuthContext.Provider>
+		);
+	} else {
+		return (
+			<>
+				{children}
+			</>
+		);
+	}
 }
