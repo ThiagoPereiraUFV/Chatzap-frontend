@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
-interface EnterRoomModalTypes {
+interface EnterRoomModalProps {
 	roomId: string,
 	setRoomId: Dispatch<SetStateAction<string>>,
 	enterRoom(event: FormEvent): Promise<void>,
@@ -9,7 +9,7 @@ interface EnterRoomModalTypes {
 	setEnterRoomModal: Dispatch<SetStateAction<boolean>>
 }
 
-export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, setEnterRoomModal }: EnterRoomModalTypes) => (
+export const EnterRoomModal = ({ roomId, setRoomId, enterRoom, enterRoomModal, setEnterRoomModal }: EnterRoomModalProps) => (
 	<Modal show={enterRoomModal} onHide={() => setEnterRoomModal(false)} centered>
 		<Modal.Header closeButton>
 			<Modal.Title>Entrar em uma sala</Modal.Title>

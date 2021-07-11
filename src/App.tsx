@@ -11,4 +11,5 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 export const App = () => (
 	<AuthContextProvider>
 		<Routes />
-	</AuthContextProvider>);
+	</AuthContextProvider>
+);

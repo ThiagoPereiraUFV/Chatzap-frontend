@@ -11,9 +11,8 @@ import * as Sentry from "@sentry/react";
 import io, { Socket } from "socket.io-client";
 
 //	Defining User interface
-export interface User {
+interface User {
 	_id: string,
-	id: string,
 	name: string,
 	phone: string,
 	email?: string,
@@ -84,7 +83,6 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
 			setSocket(wsConn);
 		}
-
 	}, [user]);
 
 	return (

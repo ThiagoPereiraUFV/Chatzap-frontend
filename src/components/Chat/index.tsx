@@ -19,19 +19,19 @@ import api from "../../services/api";
 import { Push } from "../Push";
 import { useAuth } from "../../hooks/useAuth";
 
-interface InfobarTypes {
+interface InfobarProps {
 	room: any,
 	chatMembers: Array<any>
 }
 
-interface InputTypes {
+interface InputProps {
 	setMessage: Dispatch<SetStateAction<string>>,
 	sendMessage(event: FormEvent): void,
 	message: string
 }
 
 export const Chat = {
-	Infobar: ({ room, chatMembers }: InfobarTypes) => {
+	Infobar: ({ room, chatMembers }: InfobarProps) => {
 		const { userToken } = useAuth();
 		const [roomImage, setRoomImage] = useState<File | null>(null);
 		const sm = useMediaQuery({ maxDeviceWidth: 426 });
@@ -269,7 +269,7 @@ export const Chat = {
 			</Row>
 		);
 	},
-	Input: ({ setMessage, sendMessage, message }: InputTypes) => (
+	Input: ({ setMessage, sendMessage, message }: InputProps) => (
 		<Form onSubmit={sendMessage}>
 			<Form.Group className="m-0 h-100" controlId="message">
 				<Row className="px-2 py-2 m-auto flex-nowrap">

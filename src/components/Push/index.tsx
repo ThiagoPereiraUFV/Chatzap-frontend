@@ -2,14 +2,14 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { Alert } from "react-bootstrap";
 
-interface PushTypes {
+interface PushProps {
 	pushShow: boolean,
 	setPushShow: Dispatch<SetStateAction<boolean>>,
 	message: string,
 	color?: string
 }
 
-export function Push({ pushShow, setPushShow, message, color }: PushTypes) {
+export function Push({ pushShow, setPushShow, message, color }: PushProps) {
 	useEffect(() => {
 		if(pushShow) {
 			setTimeout(() => {

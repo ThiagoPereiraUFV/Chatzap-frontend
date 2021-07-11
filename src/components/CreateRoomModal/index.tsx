@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
-interface CreateRoomModalTypes {
+interface CreateRoomModalProps {
 	roomName: string,
 	setRoomName: Dispatch<SetStateAction<string>>,
 	createRoom(event: FormEvent): Promise<void>,
@@ -9,7 +9,7 @@ interface CreateRoomModalTypes {
 	setCreateRoomModal: Dispatch<SetStateAction<boolean>>
 }
 
-export const CreateRoomModal = ({ roomName, setRoomName, createRoom, createRoomModal, setCreateRoomModal }: CreateRoomModalTypes) => (
+export const CreateRoomModal = ({ roomName, setRoomName, createRoom, createRoomModal, setCreateRoomModal }: CreateRoomModalProps) => (
 	<Modal show={createRoomModal} onHide={() => setCreateRoomModal(false)} centered>
 		<Modal.Header closeButton>
 			<Modal.Title>Criar sala</Modal.Title>
