@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import queryString from "query-string";
 
 //	Importing React Bootstrap features
-import { Container, Form, Button, Col, Row } from "react-bootstrap";
+import { Form, Button, Col, Row } from "react-bootstrap";
 
 //	Importing components
 import { Push } from "../../../components/Push";
@@ -83,6 +83,7 @@ export const Login = ({ location }: { location: any }) => {
 								placeholder="ex. (31) 99999-9999"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
+								autoComplete="tel"
 								autoFocus
 								required
 							/>
@@ -97,6 +98,7 @@ export const Login = ({ location }: { location: any }) => {
 								placeholder="Senha"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
+								autoComplete="current-password"
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
