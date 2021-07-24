@@ -157,8 +157,9 @@ export const Chats = () => {
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery("");
 				socket?.emit("joinRoom", response.data?._id);
+				setQuery(" ");
+				setQuery("");
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403].includes(error.response.status)) {
@@ -184,8 +185,9 @@ export const Chats = () => {
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery("");
 				socket?.emit("joinRoom", response.data?.roomId);
+				setQuery(" ");
+				setQuery("");
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403, 404].includes(error.response.status)) {
