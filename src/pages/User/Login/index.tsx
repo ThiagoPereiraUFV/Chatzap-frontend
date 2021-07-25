@@ -77,10 +77,10 @@ export const Login = ({ location }: { location: any }) => {
 				<Form noValidate validated={validated} onSubmit={handleLogin}>
 					<Row>
 						<Form.Group as={Col} controlId="email" sm="12">
-							<Form.Label>Seu número</Form.Label>
+							<Form.Label>Seu email</Form.Label>
 							<Form.Control
 								type="email"
-								placeholder="ex. example@provider.com"
+								placeholder="example@provider.com"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								autoComplete="email"
