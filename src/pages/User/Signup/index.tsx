@@ -40,20 +40,20 @@ export const Signup = ({ location }: { location: any }) => {
 		event.preventDefault();
 
 		const data = {
+			username: name + phone,
 			name,
 			phone,
 			email,
-			password,
-			passwordC
+			password
 		};
 
-		await api.post("/user", data)
+		await api.post("/auth/local/register", data)
 			.then((response) => {
-				if(response && response.status === 201) {
+				if(response && response.status === 200) {
 					if(rememberMe) {
-						localStorage.setItem("userToken", response.data.token);
+						localStorage.setItem("userToken", response?.data?.jwt);
 					} else {
-						sessionStorage.setItem("userToken", response.data.token);
+						sessionStorage.setItem("userToken", response?.data?.jwt);
 					}
 
 					history.go(0);

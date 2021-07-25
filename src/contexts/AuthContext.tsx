@@ -52,7 +52,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		async function fetchData() {
 			if(userToken && userToken.length) {
-				await api.get("/session", {
+				await api.get("/users/me", {
 					headers: {
 						Authorization: `Bearer ${userToken}`
 					}
