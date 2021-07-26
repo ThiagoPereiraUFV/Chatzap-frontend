@@ -131,8 +131,8 @@ export const Chats = () => {
 		}).then((response) => {
 			if(response && response.status === 201) {
 				setChatList([...chatList, response.data]);
-				socket?.emit("joinRoom", response.data?._id);
-				history?.push(`/chats?c=${response.data?.room?._id}`);
+				socket?.emit("joinRoom", response.data?.room?._id);
+				history?.push(`/chats?c=${response.data?._id}`);
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403].includes(error.response.status)) {
@@ -159,8 +159,8 @@ export const Chats = () => {
 		}).then((response) => {
 			if(response && response.status === 201) {
 				setChatList([...chatList, response.data]);
-				socket?.emit("joinRoom", response.data?._id);
-				history?.push(`/chats?c=${response.data?.room?._id}`);
+				socket?.emit("joinRoom", response.data?.room?._id);
+				history?.push(`/chats?c=${response.data?._id}`);
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403, 404].includes(error.response.status)) {
