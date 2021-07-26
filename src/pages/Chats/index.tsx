@@ -57,9 +57,53 @@ export const Chats = () => {
 
 	//	Set chat
 	useEffect(() => {
-		if(String(chatId)?.trim()?.length) {
-			setChat(chatList?.find((c) => c?.room?._id === chatId) ?? null);
+		async function fetchData() {
+			if(chatId && String(chatId)?.trim()?.length) {
+				await api.post("/graphql", {
+					query: `
+						query {
+							userRoom(id: "${chatId}") {
+								id,
+								room {
+									id,
+									name,
+									messages {
+										id,
+										text,
+										user {
+											id,
+											name,
+											phone
+										}
+									},
+									owner {
+										id,
+										name,
+										phone
+									},
+									image {
+										url,
+									},
+									createdAt,
+								}
+							}
+						}
+					`
+				}, {
+					headers: {
+						Authorization: `Bearer ${userToken}`
+					}
+				}).then((response) => {
+					if(response?.status === 200) {
+						setChat(response?.data?.data?.userRoom);
+					}
+				}).catch(() => {
+					setChat(null);
+				});
+			}
 		}
+
+		fetchData();
 	}, [chatId]);
 
 	//	Get user chatList
