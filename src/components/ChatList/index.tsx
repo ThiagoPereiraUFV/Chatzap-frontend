@@ -79,7 +79,7 @@ export const ChatList = {
 						key={i}
 						as={Col}
 						className="d-flex flex-row btn border rounded-0 py-4"
-						onClick={() => history.push(`/chats?c=${chat?.room?._id}`)}
+						onClick={() => history.push(`/chats?c=${chat?._id}`)}
 						sm="12"
 					>
 						<Col className="p-0 text-left" sm="11">

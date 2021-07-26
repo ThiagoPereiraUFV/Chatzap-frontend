@@ -55,7 +55,7 @@ export const Chats = () => {
 	//	History
 	const history = useHistory();
 
-	//	Set chat
+	//	Get chat data
 	useEffect(() => {
 		async function fetchData() {
 			if(chatId && String(chatId)?.trim()?.length) {
@@ -70,6 +70,13 @@ export const Chats = () => {
 									messages {
 										id,
 										text,
+										user {
+											id,
+											name,
+											phone
+										}
+									},
+									user_rooms {
 										user {
 											id,
 											name,
@@ -96,48 +103,23 @@ export const Chats = () => {
 				}).then((response) => {
 					if(response?.status === 200) {
 						setChat(response?.data?.data?.userRoom);
+						setMessages(response?.data?.data?.userRoom?.room?.messages ?? []);
+						setChatMembers(response?.data?.data?.userRoom?.room?.user_rooms?.map((ur: UserRoom) => ur?.user) ?? []);
 					}
 				}).catch(() => {
 					setChat(null);
+					setMessages([]);
+					setChatMembers([]);
 				});
+			} else {
+				setChat(null);
+				setMessages([]);
+				setChatMembers([]);
 			}
 		}
 
 		fetchData();
 	}, [chatId]);
-
-	//	Get user chatList
-	// useEffect(() => {
-	// 	async function fetchData() {
-	// 		if(query && query.trim()?.length) {
-	// 			await api.get(`/searchRoom?q=${query.trim()}`, {
-	// 				headers: {
-	// 					Authorization: `Bearer ${userToken}`
-	// 				}
-	// 			}).then((response) => {
-	// 				if(response && response.status === 200) {
-	// 					setChatList(response.data);
-	// 				}
-	// 			}).catch(() => {
-	// 				setChatList([]);
-	// 			});
-	// 		} else {
-	// 			await api.get("/userRoom", {
-	// 				headers: {
-	// 					Authorization: `Bearer ${userToken}`
-	// 				}
-	// 			}).then((response) => {
-	// 				if(response && response.status === 200) {
-	// 					setChatList(response.data);
-	// 				}
-	// 			}).catch(() => {
-	// 				setChatList([]);
-	// 			});
-	// 		}
-	// 	}
-
-	// 	fetchData();
-	// }, [query]);
 
 	async function createRoom(event: FormEvent) {
 		event.preventDefault();
