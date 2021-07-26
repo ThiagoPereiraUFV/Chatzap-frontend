@@ -19,9 +19,14 @@ import api from "../../services/api";
 import { Push } from "../Push";
 import { useAuth } from "../../hooks/useAuth";
 
+//	Importing interfaces
+import { User } from "../../interfaces/User";
+import { Room } from "../../interfaces/Room";
+import { Message } from "../../interfaces/Message";
+
 interface InfobarProps {
-	room: any,
-	chatMembers: Array<any>
+	room: Room,
+	chatMembers: Array<User> | null
 }
 
 interface InputProps {
@@ -174,12 +179,12 @@ export const Chat = {
 										<Col className="px-1">
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.userId?.name}`}
+													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.owner?.name}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Membros ${room?.nMembers}`}
+													{`Membros ${room?.user_rooms?.length}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
@@ -209,7 +214,7 @@ export const Chat = {
 			</Navbar>
 		);
 	},
-	Messages: ({ messages, userPhone }: { messages: Array<any>, userPhone: string | undefined }) => {
+	Messages: ({ messages, userPhone }: { messages: Array<Message>, userPhone: string | undefined }) => {
 		const ref = createRef<HTMLInputElement>();
 		useEffect(() => {
 			ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: "smooth" });
@@ -226,7 +231,7 @@ export const Chat = {
 								</Alert>
 							</Row>
 							:
-							message?.userId?.phone === userPhone ?
+							message?.user?.phone === userPhone ?
 								<div className="messageContainer justifyEnd">
 									<div className="messageBox backgroundBlue text-dark">
 										<div className="messageText colorWhite m-auto">
@@ -260,7 +265,7 @@ export const Chat = {
 										</div>
 									</div>
 									<p className="sentText m-2 my-auto">
-										{message?.userId?.name}
+										{message?.user?.name}
 									</p>
 								</div>
 						}
