@@ -184,7 +184,7 @@ export const Chat = {
 											</Row>
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Membros ${room?.user_rooms?.length}`}
+													{`Membros ${chatMembers?.length}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">

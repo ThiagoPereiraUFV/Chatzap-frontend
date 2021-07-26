@@ -67,22 +67,6 @@ export const Chats = () => {
 								room {
 									id,
 									name,
-									messages {
-										id,
-										text,
-										user {
-											id,
-											name,
-											phone
-										}
-									},
-									user_rooms {
-										user {
-											id,
-											name,
-											phone
-										}
-									},
 									owner {
 										id,
 										name,
@@ -103,23 +87,44 @@ export const Chats = () => {
 				}).then((response) => {
 					if(response?.status === 200) {
 						setChat(response?.data?.data?.userRoom);
-						setMessages(response?.data?.data?.userRoom?.room?.messages ?? []);
-						setChatMembers(response?.data?.data?.userRoom?.room?.user_rooms?.map((ur: UserRoom) => ur?.user) ?? []);
 					}
 				}).catch(() => {
 					setChat(null);
-					setMessages([]);
-					setChatMembers([]);
 				});
 			} else {
 				setChat(null);
-				setMessages([]);
-				setChatMembers([]);
 			}
 		}
 
 		fetchData();
 	}, [chatId]);
+
+	useEffect(() => {
+		if(chat) {
+			socket?.emit("getMessages", chat?.room?._id);
+			socket?.emit("getMembers", chat?.room?._id);
+
+			socket?.on("messages", (roomMessages: Array<Message>) => {
+				setMessages(roomMessages);
+			});
+
+			socket?.on("members", (roomMembers: Array<User>) => {
+				setChatMembers(roomMembers);
+			});
+
+			socket?.on("message", (receivedMsg: any) => {
+				if(receivedMsg?.roomId === chat?.room?._id) {
+					setMessages((msgs: Array<Message>) => [ ...msgs, receivedMsg ]);
+				}
+			});
+		} else {
+			socket?.off("messages");
+			socket?.off("members");
+			socket?.off("message");
+			setMessages([]);
+			setChatMembers([]);
+		}
+	}, [chat]);
 
 	async function createRoom(event: FormEvent) {
 		event.preventDefault();
