@@ -64,6 +64,7 @@ export const Chats = () => {
 						query {
 							userRoom(id: "${chatId}") {
 								id,
+								_id,
 								room {
 									id,
 									name,
@@ -112,8 +113,8 @@ export const Chats = () => {
 				setChatMembers(roomMembers);
 			});
 
-			socket?.on("message", (receivedMsg: any) => {
-				if(receivedMsg?.roomId === chat?.room?._id) {
+			socket?.on("message", (receivedMsg: Message) => {
+				if(receivedMsg?.room?.id === chat?.room?.id) {
 					setMessages((msgs: Array<Message>) => [ ...msgs, receivedMsg ]);
 				}
 			});
@@ -157,7 +158,7 @@ export const Chats = () => {
 	async function enterRoom(event: FormEvent) {
 		event.preventDefault();
 
-		await api.post(`/user-room/${roomId}`, {}, {
+		await api.post("/user-rooms", { roomId }, {
 			headers: {
 				Authorization: `Bearer ${userToken}`
 			}
@@ -186,7 +187,7 @@ export const Chats = () => {
 		event.preventDefault();
 
 		if(message) {
-			socket?.emit("sendMessage", message, chat?.room?._id);
+			socket?.emit("sendMessage", message, chat?.room?.id);
 			setMessage("");
 		}
 	}

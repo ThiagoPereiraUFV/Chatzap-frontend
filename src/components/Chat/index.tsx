@@ -37,7 +37,7 @@ interface InputProps {
 
 export const Chat = {
 	Infobar: ({ room, chatMembers }: InfobarProps) => {
-		const { userToken } = useAuth();
+		const { userToken, socket } = useAuth();
 		const [roomImage, setRoomImage] = useState<File | null>(null);
 		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
@@ -92,28 +92,10 @@ export const Chat = {
 		async function exitRoom(event: FormEvent) {
 			event.preventDefault();
 
-			await api.delete(`/userRoom/${room?._id}`, {
-				headers: {
-					Authorization: `Bearer ${userToken}`
-				}
-			}).then((response) => {
-				if(response?.status === 200) {
-					history.go(0);
-				}
-			}).catch((error) => {
-				setColorPush("danger");
-				if(error.response && error.response.status === 400) {
-					const errorMessages = error.response.data;
-					setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
-				} else if(error.response && error.response.status === 404) {
-					setMessagePush(error.response.data);
-				} else if(error.response && error.response.status === 500) {
-					setMessagePush(error.message);
-				} else {
-					setMessagePush("Algo deu errado :(");
-				}
-				setPushShow(true);
-			});
+			if(room) {
+				socket?.emit("leaveRoom", room?.id);
+				history.go(0);
+			}
 		}
 
 		return (

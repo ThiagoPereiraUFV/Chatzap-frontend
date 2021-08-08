@@ -5,6 +5,7 @@ import { UserRoom } from "./UserRoom";
 
 //	Defining Room interface
 export interface Room {
+	id: string,
 	_id: string,
 	name: string,
 	image?: Record<string, any>,
