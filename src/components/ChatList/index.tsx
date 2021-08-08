@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, FormEvent } from "react";
 import { Navbar, Nav, NavDropdown, Badge, Card, Col, Row, Form } from "react-bootstrap";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { emojify } from "react-emoji";
+import { UserRoom } from "../../interfaces/UserRoom";
 
 export const ChatList = {
 	Infobar: ({ actions }: { actions: Array<any> }) => {
@@ -66,7 +67,7 @@ export const ChatList = {
 			</Form.Group>
 		</Form>
 	),
-	Chats: ({ chats }: { chats: Array<any> }) => {
+	Chats: ({ chats }: { chats: Array<UserRoom> }) => {
 		const history = useHistory();
 
 		return (
@@ -78,11 +79,11 @@ export const ChatList = {
 						key={i}
 						as={Col}
 						className="d-flex flex-row btn border rounded-0 py-4"
-						onClick={() => history.push(`/chats?c=${chat?.roomId?._id}`)}
+						onClick={() => history.push(`/chats?c=${chat?._id}`)}
 						sm="12"
 					>
 						<Col className="p-0 text-left" sm="11">
-							{emojify(chat?.roomId?.name ?? chat?.name)}
+							{emojify(chat?.room?.name)}
 						</Col>
 						<Badge
 							as={Col}
@@ -90,7 +91,7 @@ export const ChatList = {
 							variant="success"
 							sm="auto"
 						>
-							{chat?.roomId?.nMembers ?? chat?.nMembers}
+							{chat?.room?.user_rooms?.length}
 						</Badge>
 					</Card>
 				))}

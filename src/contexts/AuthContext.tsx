@@ -1,5 +1,5 @@
 //	Importing React resources
-import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 //	Importing api to communicate to backend
 import api from "../services/api";
@@ -11,18 +11,8 @@ import * as Sentry from "@sentry/react";
 import io, { Socket } from "socket.io-client";
 import { Loading } from "../components/Loading";
 
-//	Defining User interface
-interface User {
-	_id: string,
-	name: string,
-	phone: string,
-	email?: string,
-	password: string,
-	online: boolean,
-	image?: string,
-	createdAt: Date,
-	updatedAt: Date
-}
+//	Importing User interface
+import { User } from "../interfaces/User";
 
 //	Defining AuthContext interface
 interface AuthContextType {
@@ -52,7 +42,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		async function fetchData() {
 			if(userToken && userToken.length) {
-				await api.get("/session", {
+				await api.get("/users/me", {
 					headers: {
 						Authorization: `Bearer ${userToken}`
 					}

@@ -22,14 +22,19 @@ import { useMediaQuery } from "react-responsive";
 //	Importing auth user data
 import { useAuth } from "../../hooks/useAuth";
 
+//	Importing interfaces
+import { Message } from "../../interfaces/Message";
+import { User } from "../../interfaces/User";
+import { UserRoom } from "../../interfaces/UserRoom";
+
 export const Chats = () => {
 	const { user, userToken, socket } = useAuth();
 	const [query, setQuery] = useState<string>("");
 	const [message, setMessage] = useState("");
-	const [messages, setMessages] = useState<any>([]);
-	const [chatList, setChatList] = useState([]);
-	const [chat, setChat] = useState<any>(null);
-	const [chatMembers, setChatMembers] = useState([]);
+	const [messages, setMessages] = useState<Array<Message>>([]);
+	const [chatList, setChatList] = useState(user?.user_rooms ?? []);
+	const [chat, setChat] = useState<UserRoom | null>(null);
+	const [chatMembers, setChatMembers] = useState<Array<User> | null>(null);
 
 	//	Push notification state variables
 	const [pushShow, setPushShow] = useState(false);
@@ -50,50 +55,39 @@ export const Chats = () => {
 	//	History
 	const history = useHistory();
 
-	//	Get user chatList
+	//	Get chat data
 	useEffect(() => {
 		async function fetchData() {
-			if(query && query.trim()?.length) {
-				await api.get(`/searchRoom?q=${query.trim()}`, {
+			if(chatId && String(chatId)?.trim()?.length) {
+				await api.post("/graphql", {
+					query: `
+						query {
+							userRoom(id: "${chatId}") {
+								id,
+								_id,
+								room {
+									id,
+									name,
+									owner {
+										id,
+										name,
+										phone
+									},
+									image {
+										url,
+									},
+									createdAt,
+								}
+							}
+						}
+					`
+				}, {
 					headers: {
 						Authorization: `Bearer ${userToken}`
 					}
 				}).then((response) => {
-					if(response && response.status === 200) {
-						setChatList(response.data.filter((c: any) => c?.roomId));
-					}
-				}).catch(() => {
-					setChatList([]);
-				});
-			} else {
-				await api.get("/userRoom", {
-					headers: {
-						Authorization: `Bearer ${userToken}`
-					}
-				}).then((response) => {
-					if(response && response.status === 200) {
-						setChatList(response.data);
-					}
-				}).catch(() => {
-					setChatList([]);
-				});
-			}
-		}
-
-		fetchData();
-	}, [query]);
-
-	//	Get user chat
-	useEffect(() => {
-		async function fetchData() {
-			if(chatId && chatId.length) {
-				await api.get(`/userRoom/${chatId}`, {
-					headers: {
-						Authorization: `Bearer ${userToken}`
-					}
-				}).then((response) => {
-					if(response && response.status === 200) {
-						setChat(response.data);
+					if(response?.status === 200) {
+						setChat(response?.data?.data?.userRoom);
 					}
 				}).catch(() => {
 					setChat(null);
@@ -106,43 +100,28 @@ export const Chats = () => {
 		fetchData();
 	}, [chatId]);
 
-	//	Get chat messages
 	useEffect(() => {
-		async function fetchData() {
-			await api.get(`/allRoomUsers/${chat?.roomId?._id}`, {
-				headers: {
-					Authorization: `Bearer ${userToken}`
-				}
-			}).then((response) => {
-				if(response && response.status === 200) {
-					setChatMembers(response.data?.map((m: any) => m?.userId));
-				}
-			}).catch(() => {
-				setChat(null);
-			});
-		}
-
 		if(chat) {
-			fetchData();
-			socket?.emit("getMessages", chat?.roomId?._id);
+			socket?.emit("getMessages", chat?.room?._id);
+			socket?.emit("getMembers", chat?.room?._id);
 
-			socket?.on("messages", (roomMessages: Array<any>) => {
+			socket?.on("messages", (roomMessages: Array<Message>) => {
 				setMessages(roomMessages);
 			});
 
-			socket?.on("message", (receivedMsg: any) => {
-				if(receivedMsg?.roomId === chat?.roomId?._id) {
-					setMessages((msgs: Array<any>) => [ ...msgs, receivedMsg ]);
-				}
+			socket?.on("members", (roomMembers: Array<User>) => {
+				setChatMembers(roomMembers);
 			});
 
-			socket?.on("disconnect", () => {
-				setTimeout(() => history.go(0), 2000);
+			socket?.on("message", (receivedMsg: Message) => {
+				if(receivedMsg?.room?.id === chat?.room?.id) {
+					setMessages((msgs: Array<Message>) => [ ...msgs, receivedMsg ]);
+				}
 			});
 		} else {
 			socket?.off("messages");
+			socket?.off("members");
 			socket?.off("message");
-			socket?.off("disconnect");
 			setMessages([]);
 			setChatMembers([]);
 		}
@@ -151,14 +130,15 @@ export const Chats = () => {
 	async function createRoom(event: FormEvent) {
 		event.preventDefault();
 
-		await api.post("/room", { name: roomName }, {
+		await api.post("/rooms", { name: roomName }, {
 			headers: {
 				Authorization: `Bearer ${userToken}`
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery("");
-				socket?.emit("joinRoom", response.data?._id);
+				setChatList([...chatList, response.data]);
+				socket?.emit("joinRoom", response.data?.room?._id);
+				history?.push(`/chats?c=${response.data?._id}`);
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403].includes(error.response.status)) {
@@ -178,14 +158,15 @@ export const Chats = () => {
 	async function enterRoom(event: FormEvent) {
 		event.preventDefault();
 
-		await api.post(`/userRoom/${roomId}`, {}, {
+		await api.post("/user-rooms", { roomId }, {
 			headers: {
 				Authorization: `Bearer ${userToken}`
 			}
 		}).then((response) => {
 			if(response && response.status === 201) {
-				setQuery("");
-				socket?.emit("joinRoom", response.data?.roomId);
+				setChatList([...chatList, response.data]);
+				socket?.emit("joinRoom", response.data?.room?._id);
+				history?.push(`/chats?c=${response.data?._id}`);
 			}
 		}).catch((error) => {
 			if(error.response && [401, 403, 404].includes(error.response.status)) {
@@ -206,7 +187,7 @@ export const Chats = () => {
 		event.preventDefault();
 
 		if(message) {
-			socket?.emit("sendMessage", message, chat?.roomId?._id);
+			socket?.emit("sendMessage", message, chat?.room?.id);
 			setMessage("");
 		}
 	}
@@ -241,7 +222,7 @@ export const Chats = () => {
 
 			{chat ?
 				<Col className="d-flex p-0 flex-column">
-					<Chat.Infobar room={chat?.roomId} chatMembers={chatMembers} />
+					<Chat.Infobar room={chat?.room} chatMembers={chatMembers} />
 					<Chat.Messages messages={messages} userPhone={user?.phone} />
 					<Chat.Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 				</Col>

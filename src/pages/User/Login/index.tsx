@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import queryString from "query-string";
 
 //	Importing React Bootstrap features
-import { Container, Form, Button, Col, Row } from "react-bootstrap";
+import { Form, Button, Col, Row } from "react-bootstrap";
 
 //	Importing components
 import { Push } from "../../../components/Push";
@@ -19,7 +19,7 @@ import api from "../../../services/api";
 
 export const Login = ({ location }: { location: any }) => {
 	//	User state variables
-	const [phone, setPhone] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(false);
 
@@ -37,17 +37,17 @@ export const Login = ({ location }: { location: any }) => {
 		event.preventDefault();
 
 		const data = {
-			phone,
+			identifier: email,
 			password
 		};
 
-		await api.post("/session", data)
+		await api.post("/auth/local", data)
 			.then((response) => {
-				if(response && response.status === 201) {
+				if(response && response.status === 200) {
 					if(rememberMe) {
-						localStorage.setItem("userToken", response.data.token);
+						localStorage.setItem("userToken", response?.data?.jwt);
 					} else {
-						sessionStorage.setItem("userToken", response.data.token);
+						sessionStorage.setItem("userToken", response?.data?.jwt);
 					}
 
 					history.go(0);
@@ -76,18 +76,19 @@ export const Login = ({ location }: { location: any }) => {
 			<Col className="m-auto" sm="3">
 				<Form noValidate validated={validated} onSubmit={handleLogin}>
 					<Row>
-						<Form.Group as={Col} controlId="phone" sm="12">
-							<Form.Label>Seu número</Form.Label>
+						<Form.Group as={Col} controlId="email" sm="12">
+							<Form.Label>Seu email</Form.Label>
 							<Form.Control
-								type="tel"
-								placeholder="ex. (31) 99999-9999"
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
+								type="email"
+								placeholder="example@provider.com"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								autoComplete="email"
 								autoFocus
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
-								Digite um número de telefone válido
+								Digite um email válido
 							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="password" sm="12">
@@ -97,6 +98,7 @@ export const Login = ({ location }: { location: any }) => {
 								placeholder="Senha"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
+								autoComplete="current-password"
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
@@ -122,7 +124,7 @@ export const Login = ({ location }: { location: any }) => {
 							<Button
 								variant="success"
 								type="submit"
-								disabled={!phone || !password}
+								disabled={!email || !password}
 							>
 								Continuar
 							</Button>

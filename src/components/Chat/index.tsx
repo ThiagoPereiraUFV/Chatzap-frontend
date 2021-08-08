@@ -19,9 +19,14 @@ import api from "../../services/api";
 import { Push } from "../Push";
 import { useAuth } from "../../hooks/useAuth";
 
+//	Importing interfaces
+import { User } from "../../interfaces/User";
+import { Room } from "../../interfaces/Room";
+import { Message } from "../../interfaces/Message";
+
 interface InfobarProps {
-	room: any,
-	chatMembers: Array<any>
+	room: Room,
+	chatMembers: Array<User> | null
 }
 
 interface InputProps {
@@ -32,7 +37,7 @@ interface InputProps {
 
 export const Chat = {
 	Infobar: ({ room, chatMembers }: InfobarProps) => {
-		const { userToken } = useAuth();
+		const { userToken, socket } = useAuth();
 		const [roomImage, setRoomImage] = useState<File | null>(null);
 		const sm = useMediaQuery({ maxDeviceWidth: 426 });
 		const history = useHistory();
@@ -87,28 +92,10 @@ export const Chat = {
 		async function exitRoom(event: FormEvent) {
 			event.preventDefault();
 
-			await api.delete(`/userRoom/${room?._id}`, {
-				headers: {
-					Authorization: `Bearer ${userToken}`
-				}
-			}).then((response) => {
-				if(response?.status === 200) {
-					history.go(0);
-				}
-			}).catch((error) => {
-				setColorPush("danger");
-				if(error.response && error.response.status === 400) {
-					const errorMessages = error.response.data;
-					setMessagePush(errorMessages.errors ? errorMessages.errors.join(", ") : errorMessages);
-				} else if(error.response && error.response.status === 404) {
-					setMessagePush(error.response.data);
-				} else if(error.response && error.response.status === 500) {
-					setMessagePush(error.message);
-				} else {
-					setMessagePush("Algo deu errado :(");
-				}
-				setPushShow(true);
-			});
+			if(room) {
+				socket?.emit("leaveRoom", room?.id);
+				history.go(0);
+			}
 		}
 
 		return (
@@ -174,12 +161,12 @@ export const Chat = {
 										<Col className="px-1">
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.userId?.name}`}
+													{`Criado em ${new Date(room?.createdAt).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"})} por ${room?.owner?.name}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
 												<Col className="text-light m-2">
-													{`Membros ${room?.nMembers}`}
+													{`Membros ${chatMembers?.length}`}
 												</Col>
 											</Row>
 											<Row className="m-auto">
@@ -209,7 +196,7 @@ export const Chat = {
 			</Navbar>
 		);
 	},
-	Messages: ({ messages, userPhone }: { messages: Array<any>, userPhone: string | undefined }) => {
+	Messages: ({ messages, userPhone }: { messages: Array<Message>, userPhone: string | undefined }) => {
 		const ref = createRef<HTMLInputElement>();
 		useEffect(() => {
 			ref?.current?.scroll({ top: ref.current.scrollHeight, behavior: "smooth" });
@@ -226,7 +213,7 @@ export const Chat = {
 								</Alert>
 							</Row>
 							:
-							message?.userId?.phone === userPhone ?
+							message?.user?.phone === userPhone ?
 								<div className="messageContainer justifyEnd">
 									<div className="messageBox backgroundBlue text-dark">
 										<div className="messageText colorWhite m-auto">
@@ -260,7 +247,7 @@ export const Chat = {
 										</div>
 									</div>
 									<p className="sentText m-2 my-auto">
-										{message?.userId?.name}
+										{message?.user?.name}
 									</p>
 								</div>
 						}

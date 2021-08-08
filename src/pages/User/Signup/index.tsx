@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import queryString from "query-string";
 
 //	Importing React Bootstrap features
-import { Container, Form, Button, Col, Row } from "react-bootstrap";
+import { Form, Button, Col, Row } from "react-bootstrap";
 
 //	Importing components
 import { Push } from "../../../components/Push";
@@ -40,20 +40,20 @@ export const Signup = ({ location }: { location: any }) => {
 		event.preventDefault();
 
 		const data = {
+			username: name + phone,
 			name,
 			phone,
 			email,
-			password,
-			passwordC
+			password
 		};
 
-		await api.post("/user", data)
+		await api.post("/auth/local/register", data)
 			.then((response) => {
-				if(response && response.status === 201) {
+				if(response && response.status === 200) {
 					if(rememberMe) {
-						localStorage.setItem("userToken", response.data.token);
+						localStorage.setItem("userToken", response?.data?.jwt);
 					} else {
-						sessionStorage.setItem("userToken", response.data.token);
+						sessionStorage.setItem("userToken", response?.data?.jwt);
 					}
 
 					history.go(0);
@@ -89,6 +89,7 @@ export const Signup = ({ location }: { location: any }) => {
 								placeholder="ex. Mateus"
 								value={name}
 								onChange={(e) => setName(e.target.value)}
+								autoComplete="name"
 								autoFocus
 								required
 							/>
@@ -103,6 +104,7 @@ export const Signup = ({ location }: { location: any }) => {
 								placeholder="ex. (31) 99999-9999"
 								value={phone}
 								onChange={(e) => setPhone(e.target.value)}
+								autoComplete="tel"
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
@@ -116,6 +118,7 @@ export const Signup = ({ location }: { location: any }) => {
 								placeholder="ex. exemplo@provedor.com"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
+								autoComplete="email"
 							/>
 							<Form.Text muted>Opcional</Form.Text>
 						</Form.Group>
@@ -126,10 +129,11 @@ export const Signup = ({ location }: { location: any }) => {
 								placeholder="Senha"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
+								autoComplete="new-password"
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
-								Digite uma senha
+								Digite uma senha válida
 							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} controlId="passwordC" sm="6">
@@ -139,6 +143,7 @@ export const Signup = ({ location }: { location: any }) => {
 								placeholder="Confirmação da senha"
 								value={passwordC}
 								onChange={(e) => setPasswordC(e.target.value)}
+								autoComplete="new-password"
 								required
 							/>
 							<Form.Control.Feedback type="invalid">
@@ -165,7 +170,7 @@ export const Signup = ({ location }: { location: any }) => {
 							<Button
 								variant="success"
 								type="submit"
-								disabled={!name || !phone || !password || !passwordC}
+								disabled={!name || !phone || !password || !passwordC || password !== passwordC}
 							>
 								Continuar
 							</Button>
